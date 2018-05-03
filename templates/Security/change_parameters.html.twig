@@ -1,0 +1,48 @@
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card-group">
+          <div class="card p-4">
+            <div class="card-body">
+            	<h1>Changement de mot de passe</h1>
+{{ form_start(form) }}
+
+	<div class="input-group mb-3">	
+		<div class="input-group-prepend">
+			<span class="input-group-text"><i class="icon-lock"></i></span>
+		</div>
+		{{ form_widget(form.oldPassword, {'attr': {'class': 'form-control','placeholder':'Ancien mot de passe'}}) }}
+	</div>
+
+	<div class="input-group mb-3">	
+		<div class="input-group-prepend">
+			<span class="input-group-text"><i class="icon-lock"></i></span>
+		</div>
+		{{ form_widget(form.newPassword.first, {'attr': {'class': 'form-control','placeholder':'Nouveau mot de passe'}}) }}
+	</div>
+	
+	
+	<div class="input-group mb-4">
+		<div class="input-group-prepend">
+			<span class="input-group-text"><i class="icon-lock"></i></span>
+		</div>
+		{{ form_widget(form.newPassword.second, {'attr': {'class': 'form-control','placeholder':'Confirmation du nouveau mot de passe'}}) }}
+	</div>
+	{% if form.vars.errors.form.getErrors(true)|length > 0 %}
+		<div class="alert alert-danger" role="alert">
+	    	{% for error in form.vars.errors.form.getErrors(true) %}
+	   			 <p>{{ error.message }}</p>
+	    	{% endfor %}
+		</div>
+	{% endif %}
+
+	<button type="submit" class="btn btn-block btn-success">Valider le changement de paramètres</button>
+	{{ form_end(form) }}
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>

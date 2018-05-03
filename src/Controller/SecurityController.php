@@ -1,11 +1,14 @@
 <?php
 namespace App\Controller;
 
+use App\Form\ChangeParametersType;
+use App\Entity\ChangeParameters;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
 
@@ -37,4 +40,34 @@ class SecurityController extends AbstractController
         throw new \Exception('This should never be reached!');
     }
 
+     /**
+     * La route pour se deconnecter.
+     * 
+     * Mais celle ci ne doit jamais être executé car symfony l'interceptera avant.
+     *
+     *
+     * @Route("/parameters", name="parameters")
+     */
+    public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $changeParameters = new ChangeParameters();
+        $form = $this->createForm(ChangeParametersType::class, $changeParameters);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $password = $passwordEncoder->encodePassword($this->getUser(), $changeParameters->getNewPassword());
+            $user= $this->getUser();
+            $user->setPassword($password);
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            return $this->redirectToRoute('index');
+        }
+
+        return $this->render(
+            'Security/change_parameters.html.twig',
+            array('form' => $form->createView())
+        );
+    }
 }
