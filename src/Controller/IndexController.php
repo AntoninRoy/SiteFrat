@@ -16,11 +16,37 @@ class IndexController extends Controller
     }
 
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/actualite", name="actualite")
      */
-    public function admin()
+    public function actualite()
     {
-        return $this->render('Admin/index.html.twig');
+
+        return $this->render('index.html.twig');
     }
+
+    /**
+     * @Route("/agenda", name="agenda")
+     */
+    public function agenda()
+    {
+        return $this->render('index.html.twig');
+    }
+
+    /**
+     * @Route("/contact", name="contact")
+     */
+    public function contact()
+    {
+        return $this->render('index.html.twig');
+    }
+
+    /**
+     * @Route("/galerie", name="galerie")
+     */
+    public function galerie()
+    {
+        return $this->render('index.html.twig');
+    }
+
 
 }

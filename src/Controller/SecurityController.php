@@ -41,9 +41,6 @@ class SecurityController extends AbstractController
     }
 
      /**
-     * La route pour se deconnecter.
-     * 
-     * Mais celle ci ne doit jamais être executé car symfony l'interceptera avant.
      *
      *
      * @Route("/parameters", name="parameters")

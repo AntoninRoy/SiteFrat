@@ -1,0 +1,622 @@
+{% extends 'Layout/admin_layout.html.twig' %}
+
+{% block h1 %}Gestion galerie{% endblock %}
+
+{% block stylesheets %}
+<style>
+.dropzone{
+    border : none;
+  -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.dropzone .dz-preview.dz-image-preview img{
+     border : none;
+  -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+.dropzone .dz-preview.dz-image{
+      -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+.dropzone .dz-remove{
+    color : red;
+    margin : 10px;
+    text-decoration: none;
+}
+
+.dropzone .dz-error-message{
+    margin-top: 25px;
+
+}
+.dropzone .dz-details{
+    padding-top: 10px !important;
+}
+.dropzone .dz-error-mark{
+    padding-top: 12px !important;
+}
+svg g g {
+    fill : red !important;
+}
+
+
+.dropzone  .dz-progress {
+  /* progress bar covers file name */
+  display: none !important;
+}
+.selectric{
+    margin-bottom : 20px;
+}
+
+.content-column{
+   display: flex;
+  flex-direction: row;
+ 
+}
+.left-column{
+  flex : 7 0 0px;
+   padding-right : 20px;
+   padding-bottom : 40px;
+}
+.right-column{
+      flex : 4 0 0px;
+       padding-left : 20px;
+       border-left : 1px dotted rgb(102, 102, 102);
+}
+
+.flex-table{
+    display: flex;
+  flex-direction: column;
+  
+
+}
+.flex-table .header .row {
+    border-bottom: 1px dotted #8C8C8C;
+    font-weight: bold;
+}
+
+.flex-table .row{
+    width: 100%;
+    display: flex;
+  flex-direction: row;
+
+}
+.flex-table .body .row:nth-of-type(2n) {
+background-color : #f2f2f2;
+}
+
+.flex-table  .row div {
+    height: 30px;
+    display: flex; /* contexte sur le parent */
+    flex-direction: column; /* direction d'affichage verticale */
+    justify-content: center; /* alignement vertical */
+    align-items: center;
+ 
+}
+.flex-table  div .nom{
+    flex : 5 0 0px;
+    overflow: hidden;
+}
+.flex-table  .section{
+    display :flex;
+    overflow: hidden;
+    flex : 3 0 0px;
+
+ 
+}
+.flex-table  .icon{
+    flex : 1 0 0px;
+}
+
+@media screen and (max-width: 640px) {
+    .content-column{
+        flex-direction: column;
+    }
+    .right-column{
+        padding-left : 0px;
+        border : none;
+    }
+    .left-column{
+        padding-right : 0px;
+    }
+    .flex-table  .section{
+        display: none!important;
+    }
+}
+
+
+
+
+
+
+</style>
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="content-column">
+        <div class="left-column">
+            <h2>Toutes les images</h2>
+            <div class="flex-table">
+                <div class="header">
+                    <div class="row">
+                        <div class="nom">Nom</div>
+                        <div class="section"  >Section</div>
+                        <div class="icon"></div>
+                        <div class="icon"></div>
+                    </div>
+                
+                </div>
+                <div class="body" id ="gallery">
+                    {% for image in images %}
+                        <div class="row" data-id ="{{image.id}}">
+                            <div class = "nom" >
+                                <a href="{{ asset('upload/images') }}/galery/{{image.files}}" data-caption="Sunset in the wheat field<br><em class='text-muted'>© Jordan McQueen</em>" data-width="{{ image.x }}" data-height="{{ image.y }}" itemprop="contentUrl">
+                                {{image.prettyName}}
+                                </a>
+                            </div>
+                            <div class = "section" >{{image.section.name}}</div>
+                            <div class = "icon delete"><a href ="#"><i class="fas fa-times-circle fa-lg" style="color:Tomato" title="Supprimer" ></i></a></div>
+                            <div class = "icon informations"><a href ="#"><i class="fas fa-info-circle fa-lg" style="color:blue" title="Plus d'informations"></i></a></div>
+                        </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+
+            {% if images|length ==  15 %}
+                <div class="moreContent">
+                    <button type="button" data-total={{ images|length }}>Afficher plus ...</button>
+                </div>
+            {% endif %}
+        </div>
+        <div class="right-column">
+            <h2>Ajouter une image</h2>
+            <div class="info">
+                <p>Attention a bien faire comme ça</p>
+                <p>Attention a bien faire comme ça</p>
+            </div>
+            <form action="#" method="post" name ="temp">
+                <div>
+                    <select id="section" placeholder="section">
+                        <option value="" disabled selected>Sélectionnez la section</option>
+                        {% for section in sections %}
+                            <option  value="{{ section.id }}" >{{ section.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div id="fileInput" class="dropzone">
+                <div class="fallback">
+                    <input name="file" type="file" multiple />
+                </div>
+                </div>
+                <div>
+                    <input type="submit" value="Submit" id="submit-all" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+            <!-- Background of PhotoSwipe. 
+                 It's a separate element as animating opacity is faster than rgba(). -->
+            <div class="pswp__bg"></div>
+        
+            <!-- Slides wrapper with overflow:hidden. -->
+            <div class="pswp__scroll-wrap">
+        
+                <!-- Container that holds slides. 
+                    PhotoSwipe keeps only 3 of them in the DOM to save memory.
+                    Don't modify these 3 pswp__item elements, data is added later on. -->
+                <div class="pswp__container">
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                </div>
+        
+                <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+                <div class="pswp__ui pswp__ui--hidden">
+        
+                    <div class="pswp__top-bar">
+        
+                        <!--  Controls are self-explanatory. Order can be changed. -->
+        
+                        <div class="pswp__counter"></div>
+        
+                        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        
+                        <button class="pswp__button pswp__button--share" title="Share"></button>
+        
+                        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        
+                        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        
+                        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                        <!-- element will get class pswp__preloader--active when preloader is running -->
+                        <div class="pswp__preloader">
+                            <div class="pswp__preloader__icn">
+                              <div class="pswp__preloader__cut">
+                                <div class="pswp__preloader__donut"></div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                        <div class="pswp__share-tooltip"></div> 
+                    </div>
+        
+                    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                    </button>
+        
+                    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                    </button>
+        
+                    <div class="pswp__caption">
+                        <div class="pswp__caption__center"></div>
+                    </div>
+        
+                </div>
+        
+            </div>
+        
+        </div>
+   
+        
+{% endblock %}
+
+{% block javascripts %}
+recalculatePageHeight();
+$(document).on( "click",'.moreContent', function() {
+    var total = $(this).find("button").attr("data-total");
+    $.ajax({
+        url: "{{ path("viewmore_image") }}",
+        method: "post",
+        data: {
+            total:total,
+            
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            $.confirm({
+                title: 'Une erreur a été détectée',
+                content:"Veuillez contacter l'administrateur en cas de récidive",
+
+
+                boxWidth: '500px',
+                useBootstrap: false,
+                type: 'red',
+                typeAnimated: true,
+
+                buttons: {
+                    tryAgain: {
+                        text: 'Ok',
+                        btnClass: 'btn-red',
+                        action: function(){
+                        }
+                    },
+                }
+            });
+        },
+        success: function (msg) {
+                console.log(msg);
+                $(".left-column").replaceWith(msg.html);
+                initSlider();
+                recalculatePageHeight();
+        }
+    })
+});
+
+$(document).on( "click",'.icon.delete', function() {
+    var src_img = $(this).parent().find('a').attr("href");
+    var img_id = $(this).parent().attr("data-id");
+  $.confirm({
+    title: 'Supprimer ?',
+    content: "Etes vous sûr de vouloir supprimer cette image ?" + 
+            "<img src='"+src_img +"'>",
+
+    boxWidth: '500px',
+    useBootstrap: false,
+    buttons: {
+        Confirmer: function () {
+            $.ajax({
+                url: "{{ path("delete_image") }}",
+                method: "post",
+                data: {
+                    img_id:img_id,
+                    
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    $.confirm({
+                        title: 'Une erreur a été détectée',
+                        content:"Veuillez contacter l'administrateur en cas de récidive",
+
+
+                        boxWidth: '500px',
+                        useBootstrap: false,
+                        type: 'red',
+                        typeAnimated: true,
+
+                        buttons: {
+                            tryAgain: {
+                                text: 'Ok',
+                                btnClass: 'btn-red',
+                                action: function(){
+                                }
+                            },
+                        }
+                    });
+                },
+                success: function (msg) {
+                    console.log(msg);
+                     $(".left-column").replaceWith(msg.html);
+                     initSlider();
+                     recalculatePageHeight();
+                }
+            })
+        },
+        Annuler: function () {
+            
+        },
+    }
+    });
+});
+
+$(document).on( "click",'.icon.informations', function() {
+    var img_id = $(this).parent().attr("data-id");
+    $.confirm({
+        content: function () {
+            var self = this;
+            return $.ajax({
+                 title: 'Informations supplémentaires',
+                url: "{{ path("more_image") }}",
+                method: "post",
+                data: {
+                    img_id:img_id,
+                },
+                boxWidth: '500px',
+                useBootstrap: false,
+            }).done(function (response) {
+               
+                self.setContent(response.html);
+            }).fail(function(){
+                self.setContent('Something went wrong.');
+            });
+        }
+    });
+});
+
+
+ 
+Dropzone.autoDiscover = false;
+
+$(document).ready(function() {
+  new Dropzone('#fileInput', { 
+    url: "{{path('admin_image_upload')}}",
+     uploadMultiple: true,
+    maxFilesize: 5,
+    parallelUploads: 10,
+    maxFiles: 100,
+    addRemoveLinks: true,
+    acceptedFiles: 'image/jpeg,image/png,image/png,image/gif',
+    autoProcessQueue: false,
+    paramName: "files",
+    dictInvalidFileType : "Le format du fichier est invalide",
+    dictDefaultMessage : "Cliquez pour ajouter une image à la galerie",
+    dictRemoveFile : "Supprimer",
+    dictFileTooBig : "Fichier trop volumineux",
+    init: function () {
+      var myDropzone = this;
+      $("#submit-all").click(function (e) {
+        e.preventDefault();
+        if(myDropzone.files.length > 0){
+            var content ="<p>Valider l'ajout de ces images ?</p><br><ul>";
+            for (var i = 0; i < myDropzone.files.length; i++) {
+                content+="<li>"+myDropzone.files[i].name+"</li>";
+            }
+            content+= "</ul><br><p>Total : "+myDropzone.files.length+"</p>";
+
+
+            if($('#section option:selected').val()!=""){
+                $.confirm({
+                    title: 'Confirmation !',
+                    content: content,
+
+                    boxWidth: '500px',
+                    useBootstrap: false,
+                    
+                    buttons: {
+                        Confirmer: function () {
+                            myDropzone.processQueue();
+                        },
+                        Annuler: function () {
+                            
+                        },
+                    }
+                });
+            }else{
+            $.confirm({
+                title: 'Attention !',
+                content: "Vous n'avez pas sélectionné la section.",
+
+                boxWidth: '500px',
+                useBootstrap: false,
+            });
+        }
+        }else{
+            $.confirm({
+                title: 'Attention !',
+                content: "Vous n'avez pas ajouté d'image(s)",
+
+                boxWidth: '500px',
+                useBootstrap: false,
+            });
+        }
+        
+      }); 
+
+      var files = [];
+      var filesError = [];
+      myDropzone.on('success', function (e,response) {
+        if(!response.error){
+            $(".left-column").replaceWith(response.html);
+            initSlider();
+            filesError=response.notUploaded;
+            files=response.uploaded;
+            recalculatePageHeight();
+        }else{
+            $.confirm({
+                    title: 'Une erreur a été détectée',
+                    content:"Veuillez contacter l'administrateur en cas de récidive",
+
+
+                    boxWidth: '500px',
+                    useBootstrap: false,
+                    type: 'red',
+                    typeAnimated: true,
+
+                    buttons: {
+                        tryAgain: {
+                            text: 'Ok',
+                            btnClass: 'btn-red',
+                            action: function(){
+                            }
+                        },
+                    }
+                });
+        }
+        
+      });
+      myDropzone.on('addedfile', function (e,response) {
+            recalculatePageHeight();
+      });
+      this.on("complete", function (file) {
+        if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+            myDropzone.removeAllFiles();
+            if(filesError.length !=0){
+                var content ="<p>Les images suivantes n'ont pas pu être ajoutées :</p><br><ul>";
+                for (var i = 0; i < filesError.length; i++) {
+                    content+="<li>"+filesError[i]+"</li>";
+                }
+                content+= "</ul><br><p>Total : "+filesError.length+"</p>";
+                $.confirm({
+                    title: 'Une erreur a été détectée',
+                    content:content,
+
+
+                    boxWidth: '500px',
+                    useBootstrap: false,
+                    type: 'red',
+                    typeAnimated: true,
+
+                    buttons: {
+                        tryAgain: {
+                            text: 'Ok',
+                            btnClass: 'btn-red',
+                            action: function(){
+                            }
+                        },
+                    }
+                });
+            }
+            if(files.length !=0){
+                var content ="<p>Les images suivantes ont être ajoutées :</p><br><ul>";
+                for (var i = 0; i < files.length; i++) {
+                    content+="<li>"+files[i]+"</li>";
+                }
+                content+= "</ul><br><p>Total : "+files.length+"</p>";
+                $.confirm({
+                    title: 'Récapitulatif',
+                    content:content,
+
+
+                    boxWidth: '500px',
+                    useBootstrap: false,
+                    type: 'green',
+                    typeAnimated: true,
+
+                    buttons: {
+                        tryAgain: {
+                            text: 'Ok',
+                            btnClass: 'btn-green',
+                            action: function(){
+                            }
+                        },
+                    }
+                });
+            }
+            files = [];
+            filesError = [];
+        }
+    });
+      
+
+   },
+   sending: function (file, xhr, formData) {
+      formData.append("sectionId", $('#section option:selected').val());
+   },
+ })
+})
+$(function() {
+  $('select').selectric();
+});
+//https://codepen.io/alienlebarge/pen/Kdrxga?editors=1010
+'use strict';
+
+/* global jQuery, PhotoSwipe, PhotoSwipeUI_Default, console */
+
+  var container = [];
+function initSlider(){
+
+  // Init empty gallery array
+
+
+  // Loop over gallery items and push it to the array
+  $('#gallery').find('.nom').each(function() {
+    var $link = $(this).find('a'),
+      item = {
+        src: $link.attr('href'),
+        w: $link.data('width'),
+        h: $link.data('height'),
+        title: $link.data('caption')
+      };
+    container.push(item);
+  });
+
+  // Define click event on gallery item
+  $('.nom a').click(function(event) {
+
+    // Prevent location change
+    event.preventDefault();
+
+    // Define object and gallery options
+    var $pswp = $('.pswp')[0],
+      options = {
+        index: $(this).parent('.nom').index(),
+        bgOpacity: 0.85,
+        showHideOpacity: true
+      };
+
+    // Initialize PhotoSwipe
+    var gallery = new PhotoSwipe($pswp, PhotoSwipeUI_Default, container, options);
+    gallery.init();
+  });
+
+}
+initSlider();
+
+
+{% endblock %}

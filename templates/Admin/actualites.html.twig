@@ -1,0 +1,76 @@
+{% extends 'Layout/admin_layout.html.twig' %}
+
+
+
+
+{% block stylesheets %}
+<style>
+
+</style>
+
+
+{% endblock %}
+
+{% block h1 %}Actualités{% endblock %}
+
+{% block body %}
+    {{ form_start(form,{'name': "create_post"}) }}
+    {{ form_widget(form.content, {'attr': {'id': 'post_content'}}) }}
+        {{ form_widget(form) }}
+
+    <div id="editor-container">
+            
+      </div>
+     
+    <button type="submit" id ="dzqdzq" >S'inscrire !</button>
+    {{ form_end(form) }}  
+
+{% endblock %}
+
+{% block javascripts %}
+
+
+    var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike', 'link'],        // toggled buttons
+        ['blockquote'],           
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+        [{ 'header': [ 2, 3, 4, 5, 6, false] }],
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        ['clean']                                         // remove formatting button
+    ];
+
+    var quill = new Quill('#editor-container', {
+    modules: {
+        toolbar:toolbarOptions
+    },
+    placeholder: 'Composez votre article ... ',
+    theme: 'snow'
+    });
+
+    $( document ).ready(function() {
+        $("textarea#post_content").val("yeaah").hide();
+    });
+
+    $('form[name="create_post"]').submit(function(e) {
+        
+        e.preventDefault();
+        $("textarea#post_content").val($("#editor-container .ql-editor").html());
+        var formSerialize = $(this).serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "{{ path('create_post') }}",
+            data: formSerialize,
+            success: function (result) {
+                console.log(result);
+                if (result.code === 200) {
+                    // refresh current url to see student
+                } else {
+
+                }
+            }
+        });
+    });
+{% endblock %}
