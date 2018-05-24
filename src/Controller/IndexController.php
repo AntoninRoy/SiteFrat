@@ -5,6 +5,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
+use App\Entity\Image;
+
+use App\Entity\Section;
+
 class IndexController extends Controller
 {
     /**
@@ -12,7 +16,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        return $this->render('index.html.twig');
+        return $this->render('User/accueil.html.twig');
     }
 
     /**
@@ -21,7 +25,7 @@ class IndexController extends Controller
     public function actualite()
     {
 
-        return $this->render('index.html.twig');
+        return $this->render('User/actualite.html.twig');
     }
 
     /**
@@ -29,7 +33,7 @@ class IndexController extends Controller
      */
     public function agenda()
     {
-        return $this->render('index.html.twig');
+        return $this->render('User/agenda.html.twig');
     }
 
     /**
@@ -37,7 +41,7 @@ class IndexController extends Controller
      */
     public function contact()
     {
-        return $this->render('index.html.twig');
+        return $this->render('User/contact.html.twig');
     }
 
     /**
@@ -45,7 +49,14 @@ class IndexController extends Controller
      */
     public function galerie()
     {
-        return $this->render('index.html.twig');
+        $image=$this->getDoctrine()
+        ->getRepository(Image::class)
+        ->findAll();
+
+        $sections = $this->getDoctrine()
+        ->getRepository(Section::class)
+        ->findAll();
+        return $this->render('User/galerie.html.twig',array("images" =>$image,"sections" =>$sections));
     }
 
 

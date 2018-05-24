@@ -1,0 +1,30 @@
+ <div class="right-column">
+        <h2> Tous les articles</h2>
+        <div class="flex-table">
+                <div class="header">
+                    <div class="row">
+                        <div class="titre">Titre</div>
+                        <div class="auteur"  >Auteur</div>
+                         <div class="date"  >Date</div>
+
+                        <div class="icon"></div>
+                        <div class="icon"></div>
+                        <div class="icon"></div>
+                    </div>
+                
+                </div>
+                <div class="body" id ="gallery">
+                    {% for post in posts %}
+                        <div class="row" data-id ="{{post.id}}">
+                            <div class = "titre" >{{post.title}}</div>
+                            <div class = "auteur" >{{post.owner.fullname}}</div>
+                            <div class = "date" >{{post.date|date("m/d/Y")}}</div>
+                            <div class = "icon delete"><a href ="#"><i class="fas fa-times-circle fa-lg" style="color:Tomato" title="Supprimer" ></i></a></div>
+                            <div class = "icon informations"><a href ="#"><i class="fas fa-info-circle fa-lg" style="color:blue" title="Plus d'informations"></i></a></div>
+                            <div class = "icon update"><a href ="#"><i class="fas fa-edit fa-lg" style="color:orange" title="Modifier"></i></a></div>
+                            </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+     </div>

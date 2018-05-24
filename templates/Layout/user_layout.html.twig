@@ -2,22 +2,55 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="{{ asset('css/user_layout.css') }}">
         {% block stylesheets %}{% endblock %}
+
+        <!-- SELECTRIC.JS -->
+        <link rel="stylesheet" href="{{ asset('css/selectric.css') }}">
+
+        <!-- UNITE-GALERY -->
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/unitegallery/1.7.40/css/unite-gallery.min.css' type='text/css' /> 
         
+        <!-- FONT-AWESOME.JS -->
+       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
     </head>
     <body>
+        <nav class="navBar">
+            <nav class="wrapper">
+                <div class="logo"></div><!-- Logo -->
+                <input type="checkbox" id="menu-toggle" />
+                <label for="menu-toggle" class="label-toggle"></label>
+                <ul>
+                <li><a href="{{ path('index')}}">Accueil</a></li>
+                <li><a href="#">La Frat'</a></li>
+                <li><a href="{{ path('actualite')}}">A la Une</a></li>
+                <li><a href="{{ path('agenda')}}">Agenda</a></li>
+                <li><a href="{{ path('contact')}}">Contact</a></li>
+                <li><a href="{{ path('galerie')}}">Galerie Photos</a></li>
+                </ul>
+            </nav>
+        </nav>
+        <div class="margin"></div>
+       
         {% block body %}{% endblock %}
+         
+    
        
     </body>
 
     <!-- JQUERY -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     
-
-    <script>
+    <!-- SELECTRIC.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/selectric@1.13.0/public/jquery.selectric.min.js"></script>
+   
+    <!-- UNITE-GALERY -->
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/unitegallery/1.7.40/js/unitegallery.min.js'></script> 
+   
      {% block javascripts %}{% endblock %}
-    </script>
+  
 
 </html>

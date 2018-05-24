@@ -136,6 +136,20 @@ h2 {
     width: 100%;
     padding: 30px;
 }
+
+.content input[type=text],.content input[type=submit]{
+    width : 100%;
+    border : none;
+    -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    height : 40px;
+    padding-left: 15px;
+}
 .content button.btn{
     height : 40px;
     width: 100%;

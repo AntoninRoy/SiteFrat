@@ -1,0 +1,364 @@
+<style>
+.jconfirm{
+    z-index : 999 !important;
+}
+</style>
+<div class="content">
+<h2 id="titleh2"> Créer un article</h2>
+    <form action="#" method="post" name ="update_post" data-postID ="{{ post.id }}" >
+        <input id="post_title2" type="text" value="{{ post.title }}" placeholder="Titre de l'article" >
+        <div id="editor-container2" placeholder="Your name..">
+        {{ post.content|striptags('<span>,<sup>,<strong>,<em>,<ul>,<li>,<s>,<sub>,<blockquote>,<ol>,<a>,<b>,<p>,<h2>,<h3>,<h4>')|raw }}
+        </div>
+        
+
+        {% if images|length > 0 %}
+            <p class="libelle_list_img">Images actuelles (Décocher pour la supprimer): </p>
+            <div class ="list-image">
+                <div class ="checkbox">
+                    {% for image in images %}
+                    <input type="checkbox" value="{{ image.id }}" checked> 
+                    {% endfor %} 
+                </div>
+                <div class ="nameImg">
+                        {% for image in images %}
+                        <a href="{{ asset('upload/images') }}/galery/{{image.files}}" data-caption="Sunset in the wheat field<br><em class='text-muted'>© Jordan McQueen</em>" data-width="{{ image.x }}" data-height="{{ image.y }}" itemprop="contentUrl">
+                            {{image.prettyName}}
+                        </a>
+                        {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        
+        <div id="fileInputUpdate2" class="dropzone">
+            <div class="fallback">
+                <input name="file" type="file" multiple />
+            </div>
+        </div>
+        <div id="contener_buttons">
+            <input type="submit" value="Modifier l'article" id="submit-all2" />
+        </div>
+    </form>
+</div>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true" >
+    <!-- Background of PhotoSwipe.It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. PhotoSwipe keeps only 3 of them in the DOM to save memory.Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+
+</div>
+<script>
+    /* Initialisation de la zone de saisie */
+    var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike', 'link'],        // toggled buttons
+        ['blockquote'],           
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+        [{ 'header': [ 2, 3, 4, false] }],
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        ['clean']                                         // remove formatting button
+    ];
+
+    var quill2 = new Quill('#editor-container2', {
+        modules: {
+            toolbar:toolbarOptions
+        },
+        placeholder: 'Composez votre article ... ',
+        theme: 'snow'
+    });
+
+    Dropzone.autoDiscover = false;
+    var myDropzone2;
+    var deleteImageId = [];
+    var files = [];
+                var filesError = [];
+    $(document).ready(function() {
+        new Dropzone('#fileInputUpdate2', { 
+            url: "{{path('update_post')}}",
+            uploadMultiple: true,
+            maxFilesize: 5,
+            parallelUploads: 10,
+            maxFiles: 100,
+            addRemoveLinks: true,
+            acceptedFiles: 'image/jpeg,image/png,image/png,image/gif',
+            autoProcessQueue: false,
+            paramName: "files",
+            dictInvalidFileType : "Le format du fichier est invalide",
+            dictDefaultMessage : "Cliquez pour ajouter une ou plusieurs images supplémentaires à votre article",
+            dictRemoveFile : "Supprimer",
+            dictFileTooBig : "Fichier trop volumineux",
+            init: function () {
+                myDropzone2 = this;
+                /* Lancement du formulaire */
+                $("#submit-all2").click(function (e) {
+                    e.preventDefault();
+                    /* Message de confirmation */
+                    var content ="<p>Valider l'ajout de ces images ?</p><br><ul>";
+                    for (var i = 0; i < myDropzone2.files.length; i++) {
+                        content+="<li>"+myDropzone2.files[i].name+"</li>";
+                    }
+                    content+= "</ul><br><p>Total : "+myDropzone2.files.length+"</p>";
+
+                    /* Vérification de tous les champs */
+                    var allOk=true;
+                    if($('#post_title2').val()=="" && allOk){
+                        simpleAdvert("Oops !","Vous n'avez saisi de titre !");
+                        allOk=false;
+                    }
+                    if(quill2.getLength()<=1 && allOk ){
+                        simpleAdvert("Oops !","Vous n'avez saisi de contenu !");
+                        allOk=false;
+                    }
+                    var deleteImageId = "";
+                    $('.checkbox').find('input[type=checkbox]:not(:checked)').each(function(index) {
+                        if(index !=0){
+                            deleteImageId+=",";
+                        }
+                        deleteImageId+=$(this).val();
+                    });
+
+                    
+                    if(allOk){
+                        $.confirm({
+                            title: 'Confirmation !',
+                            content: content,
+
+                            boxWidth: '90%',
+                            useBootstrap: false,
+                            
+                            buttons: {
+                                Confirmer: function () {
+
+                                    if (myDropzone2.getQueuedFiles().length > 0) {                        
+                                        myDropzone2.processQueue();  
+                                    }else {                 
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "{{ path('update_post') }}",
+                                            data: {
+                                                post_title: $('#post_title2').val(),
+                                                post_content :  $("#editor-container2 .ql-editor").html(),
+                                                post_id : $("form[name=update_post]").attr("data-postID"),
+                                                deleteImageId : deleteImageId,
+                                            },
+                                            success: function (result) {
+                                                $(".jconfirm-buttons button:contains('Annuler')").trigger("click");
+                                                if (result.code === 200) {
+                                                    // refresh current url to see student
+                                                } else {
+                                                }
+                                            }
+                                        });
+                                    }   
+     
+                                },
+                                Annuler: function () {
+                                    
+                                },
+                            }
+                        });
+                    }
+                    
+                
+                }); 
+
+                /* Retour de l'ajax */
+                
+                myDropzone2.on('success', function (e,response) {
+                    filesError=response.notUploaded;
+                    files=response.uploaded;
+                    recalculatePageHeight();
+                     deleteImageId = [];
+                     $(".jconfirm-buttons button:contains('Annuler')").trigger("click");
+                });
+                myDropzone2.on('error', function (e,response) {
+                    $.confirm({
+                            title: 'Une erreur a été détectée',
+                            content:"Veuillez contacter l'administrateur en cas de récidive",
+
+
+                            boxWidth: '90%',
+                            useBootstrap: false,
+                            type: 'red',
+                            typeAnimated: true,
+
+                            buttons: {
+                                tryAgain: {
+                                    text: 'Ok',
+                                    btnClass: 'btn-red',
+                                    action: function(){
+                                    }
+                                },
+                            }
+                        });
+                        return false;
+                });
+                /* Recalcul de la taille de la sidebar lors de l'ajout d'une image */
+                myDropzone2.on('addedfile', function (e,response) {
+                        recalculatePageHeight();
+                });
+
+                /* A la fin de l'upload des fichier (pas de l'ajax) */
+                this.on("complete", function (file) {
+                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                        //supression des fichiers
+                        myDropzone2.removeAllFiles();
+                        //si messages d'erreur
+                        if(filesError.length !=0){
+                            //création du message d'erreur
+                            var content ="<p>Les images suivantes n'ont pas pu être ajoutées :</p><br><ul>";
+                            for (var i = 0; i < filesError.length; i++) {
+                                content+="<li>"+filesError[i]+"</li>";
+                            }
+                            content+= "</ul><br><p>Total : "+filesError.length+"</p>";
+                            $.confirm({
+                                title: 'Une erreur a été détectée',
+                                content:content,
+
+
+                                boxWidth: '90%',
+                                useBootstrap: false,
+                                type: 'red',
+                                typeAnimated: true,
+
+                                buttons: {
+                                    tryAgain: {
+                                        text: 'Ok',
+                                        btnClass: 'btn-red',
+                                        action: function(){
+                                        }
+                                    },
+                                }
+                            });
+                        }
+                        if(files.length !=0){
+                            //création du message de confirmation
+                            var content ="<p>Les images suivantes ont être ajoutées :</p><br><ul>";
+                            for (var i = 0; i < files.length; i++) {
+                                content+="<li>"+files[i]+"</li>";
+                            }
+                            content+= "</ul><br><p>Total : "+files.length+"</p>";
+                            $.confirm({
+                                title: 'Récapitulatif',
+                                content:content,
+
+
+                                boxWidth: '90%',
+                                useBootstrap: false,
+                                type: 'green',
+                                typeAnimated: true,
+
+                                buttons: {
+                                    tryAgain: {
+                                        text: 'Ok',
+                                        btnClass: 'btn-green',
+                                        action: function(){
+                                        }
+                                    },
+                                }
+                            });
+                        }
+                        //reset des tableaux
+                        files = [];
+                        filesError = [];
+                    }
+                });
+            },
+            //ajout des différentes data dans la requète ajax
+            sending: function (file, xhr, formData) {
+                var deleteImageId = "";
+                $('.checkbox').find('input[type=checkbox]:not(:checked)').each(function(index) {
+                    if(index !=0){
+                        deleteImageId+=",";
+                    }
+                    deleteImageId+=$(this).val();
+                });
+
+                formData.append("post_id" , $("form[name=update_post]").attr("data-postID"));
+                formData.append("post_title", $('#post_title2').val());
+                formData.append("post_content", $("#editor-container2 .ql-editor").html());
+                formData.append("deleteImageId" , deleteImageId,)
+            },
+        })
+    })
+
+    'use strict';
+
+    /* global jQuery, PhotoSwipe, PhotoSwipeUI_Default, console */
+
+
+    function initSlider(){
+             var container = [];
+        // Loop over gallery items and push it to the array
+        $('.nameImg').find('a').each(function() {
+            var $link = $(this),
+            item = {
+                src: $link.attr('href'),
+                w: $link.data('width'),
+                h: $link.data('height'),
+                title: $link.data('caption')
+            };
+            container.push(item);
+            });
+
+        // Define click event on gallery item
+        $('.nameImg a').click(function(event) {
+
+            // Prevent location change
+            event.preventDefault();
+
+            // Define object and gallery options
+            var $pswp = $('.pswp')[0],
+            options = {
+                index: $(this).parent('.nameImg').index(),
+                bgOpacity: 0.85,
+                showHideOpacity: true
+            };
+
+            // Initialize PhotoSwipe
+            var gallery = new PhotoSwipe($pswp, PhotoSwipeUI_Default, container, options);
+            gallery.init();
+        });
+
+    }
+    initSlider()
+</script>

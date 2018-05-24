@@ -1,0 +1,60 @@
+{% extends 'Layout/user_layout.html.twig' %}
+
+
+
+
+{% block stylesheets %}
+<style>
+.selectContener{
+    margin-bottom : 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 30px;
+}
+</style>
+{% endblock %}
+
+{% block h1 %}Actualités{% endblock %}
+
+{% block body %}
+  <div class="pageTitle">
+      <div>
+            <h1>Galerie</h1>
+      </div>
+  </div>
+  <div class="selectContener">
+     <select id="section" placeholder="section">
+        <option value="" disabled selected>Sélectionnez la section</option>
+        {% for section in sections %}
+            <option  value="{{ section.id }}" >{{ section.name }}</option>
+        {% endfor %}
+    </select>
+  </div>
+  <div id="gallery" style="display:none;">
+    {% for image in images %}
+        <img alt="{{image.prettyName}} {{image.section.name}}" src="{{ asset('upload/images') }}/galery/{{image.files}}"
+            data-image="{{ asset('upload/images') }}/galery/{{image.files}}"
+            data-description="{{image.prettyName}}">
+        
+    {% endfor %}
+  
+  </div>
+
+{% endblock %}
+
+{% block javascripts %}
+ <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/unitegallery/1.7.40/themes/tiles/ug-theme-tiles.min.js'></script> 
+<script>
+    jQuery(document).ready(function(){ 
+            jQuery("#gallery").unitegallery({
+                tiles_type:"justified"
+            });
+            $(function() {
+                $('select').selectric();
+            });
+    });
+    
+</script>
+   
+{% endblock %}

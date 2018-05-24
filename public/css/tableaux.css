@@ -1,0 +1,30 @@
+.flex-table{
+    display: flex;
+  flex-direction: column;
+  
+
+}
+.flex-table .header .row {
+    border-bottom: 1px dotted #8C8C8C;
+    font-weight: bold;
+}
+
+.flex-table .row{
+    width: 100%;
+    display: flex;
+  flex-direction: row;
+
+}
+.flex-table .body .row:nth-of-type(2n) {
+background-color : #f2f2f2;
+}
+
+.flex-table  .row div {
+    height: 30px;
+    display: flex; /* contexte sur le parent */
+    flex-direction: column; /* direction d'affichage verticale */
+    justify-content: center; /* alignement vertical */
+    align-items: center;
+ 
+}
+

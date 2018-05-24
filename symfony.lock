@@ -56,6 +56,18 @@
     "doctrine/orm": {
         "version": "v2.6.1"
     },
+    "exercise/htmlpurifier-bundle": {
+        "version": "0.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "0.2",
+            "ref": "0b76657841c2ba52647bb1b4a5595a0e3b9f485c"
+        }
+    },
+    "ezyang/htmlpurifier": {
+        "version": "v4.10.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -283,6 +295,15 @@
     },
     "symfony/yaml": {
         "version": "v4.0.8"
+    },
+    "twig/extensions": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "4851df0afc426b8f07204379d21fca25b6df5d68"
+        }
     },
     "twig/twig": {
         "version": "v2.4.8"

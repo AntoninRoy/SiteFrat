@@ -4,56 +4,6 @@
 
 {% block stylesheets %}
 <style>
-.dropzone{
-    border : none;
-  -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
-  box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-  margin-bottom: 20px;
-}
-
-.dropzone .dz-preview.dz-image-preview img{
-     border : none;
-  -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
-  box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-}
-.dropzone .dz-preview.dz-image{
-      -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-}
-.dropzone .dz-remove{
-    color : red;
-    margin : 10px;
-    text-decoration: none;
-}
-
-.dropzone .dz-error-message{
-    margin-top: 25px;
-
-}
-.dropzone .dz-details{
-    padding-top: 10px !important;
-}
-.dropzone .dz-error-mark{
-    padding-top: 12px !important;
-}
-svg g g {
-    fill : red !important;
-}
-
-
-.dropzone  .dz-progress {
-  /* progress bar covers file name */
-  display: none !important;
-}
 .selectric{
     margin-bottom : 20px;
 }
@@ -74,35 +24,6 @@ svg g g {
        border-left : 1px dotted rgb(102, 102, 102);
 }
 
-.flex-table{
-    display: flex;
-  flex-direction: column;
-  
-
-}
-.flex-table .header .row {
-    border-bottom: 1px dotted #8C8C8C;
-    font-weight: bold;
-}
-
-.flex-table .row{
-    width: 100%;
-    display: flex;
-  flex-direction: row;
-
-}
-.flex-table .body .row:nth-of-type(2n) {
-background-color : #f2f2f2;
-}
-
-.flex-table  .row div {
-    height: 30px;
-    display: flex; /* contexte sur le parent */
-    flex-direction: column; /* direction d'affichage verticale */
-    justify-content: center; /* alignement vertical */
-    align-items: center;
- 
-}
 .flex-table  div .nom{
     flex : 5 0 0px;
     overflow: hidden;
@@ -117,6 +38,7 @@ background-color : #f2f2f2;
 .flex-table  .icon{
     flex : 1 0 0px;
 }
+
 
 @media screen and (max-width: 640px) {
     .content-column{
@@ -280,6 +202,8 @@ background-color : #f2f2f2;
 {% endblock %}
 
 {% block javascripts %}
+
+<script>
 recalculatePageHeight();
 $(document).on( "click",'.moreContent', function() {
     var total = $(this).find("button").attr("data-total");
@@ -408,8 +332,8 @@ $(document).ready(function() {
     url: "{{path('admin_image_upload')}}",
      uploadMultiple: true,
     maxFilesize: 5,
-    parallelUploads: 10,
-    maxFiles: 100,
+    parallelUploads: 1000,
+    maxFiles: 1000,
     addRemoveLinks: true,
     acceptedFiles: 'image/jpeg,image/png,image/png,image/gif',
     autoProcessQueue: false,
@@ -578,9 +502,9 @@ $(function() {
 
 /* global jQuery, PhotoSwipe, PhotoSwipeUI_Default, console */
 
-  var container = [];
+ 
 function initSlider(){
-
+ var container = [];
   // Init empty gallery array
 
 
@@ -617,6 +541,6 @@ function initSlider(){
 
 }
 initSlider();
-
+</script>
 
 {% endblock %}

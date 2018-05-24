@@ -1,0 +1,50 @@
+.dropzone{
+    border : none;
+  -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.dropzone .dz-preview.dz-image-preview img{
+     border : none;
+  -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+.dropzone .dz-preview.dz-image{
+      -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+.dropzone .dz-remove{
+    color : red;
+    margin : 10px;
+    text-decoration: none;
+}
+
+.dropzone .dz-error-message{
+    margin-top: 25px;
+
+}
+.dropzone .dz-details{
+    padding-top: 10px !important;
+}
+.dropzone .dz-error-mark{
+    padding-top: 12px !important;
+}
+svg g g {
+    fill : red !important;
+}
+
+
+.dropzone  .dz-progress {
+  /* progress bar covers file name */
+  display: none !important;
+}

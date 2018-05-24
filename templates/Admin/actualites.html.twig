@@ -6,6 +6,106 @@
 {% block stylesheets %}
 <style>
 
+#editor-container,#editor-container2{
+     margin-bottom: 20px;
+     border : none;
+    -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 0 0 4px 4px;
+}
+.ql-toolbar{
+     border : none !important;
+    -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 0px 0px 0px 0px;
+}
+
+.content-column{
+   display: flex;
+  flex-direction: row;
+ 
+}
+.left-column{
+  flex : 1 0 0px;
+   padding-right : 20px;
+   padding-bottom : 40px;
+}
+.right-column{
+      flex : 1 0 0px;
+       padding-left : 20px;
+       border-left : 1px dotted rgb(102, 102, 102);
+}
+
+.flex-table  div .titre{
+    flex : 5 0 0px;
+    overflow: hidden;
+}
+.flex-table  .auteur{
+    display :flex;
+    overflow: hidden;
+    flex : 3 0 0px;
+
+ 
+}
+.flex-table  .date{
+    flex : 2 0 0px;
+}
+.flex-table  .icon{
+    flex : 1 0 0px;
+}
+
+.list-image{
+    margin-top : 10px;
+    margin-bottom : 20px;
+   display: flex;
+  flex-direction: row;
+ 
+}
+.checkbox{
+  flex : 1 0 0px;
+  padding-right : 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+}
+.nameImg{
+      flex : 9 0 0px;
+      display: flex;
+  flex-direction: column;
+}
+
+.list-image a, .list-image input{
+    height : 20px;
+}
+
+@media screen and (max-width: 992px) {
+    .flex-table  .auteur{
+        display: none!important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .content-column{
+        flex-direction: column;
+    }
+    .right-column{
+        padding-left : 0px;
+        border : none;
+    }
+    .left-column{
+        padding-right : 0px;
+    }
+    .flex-table  .auteur,.flex-table  .date{
+        display: none!important;
+    }
+}
 </style>
 
 
@@ -14,22 +114,166 @@
 {% block h1 %}Actualités{% endblock %}
 
 {% block body %}
-    {{ form_start(form,{'name': "create_post"}) }}
-    {{ form_widget(form.content, {'attr': {'id': 'post_content'}}) }}
-        {{ form_widget(form) }}
+    <div class="content-column">
+        <div class="left-column">
 
-    <div id="editor-container">
-            
-      </div>
-     
-    <button type="submit" id ="dzqdzq" >S'inscrire !</button>
-    {{ form_end(form) }}  
 
-{% endblock %}
+        <h2 id="titleh2"> Créer un article</h2>
+            <form action="#" method="post" name ="create_post" data-type="create" data-postID=" ">
+                <input id="post_title" type="text" value="" placeholder="Titre de l'article" >
+                <div id="editor-container" placeholder="Your name..">
+                </div>
+                
+                <div id="fileInput" class="dropzone">
+                    <div class="fallback">
+                        <input name="file" type="file" multiple />
+                    </div>
+                </div>
+                <div id="contener_buttons">
+                    <input type="submit" value="Créer l'article" id="submit-all" />
+                </div>
+            </form>
+        </div>
+     <div class="right-column">
+        <h2> Tous les articles</h2>
+        <div class="flex-table">
+                <div class="header">
+                    <div class="row">
+                        <div class="titre">Titre</div>
+                        <div class="auteur"  >Auteur</div>
+                         <div class="date"  >Date</div>
+
+                        <div class="icon"></div>
+                        <div class="icon"></div>
+                        <div class="icon"></div>
+                    </div>
+                
+                </div>
+                <div class="body" id ="gallery">
+                    {% for post in posts %}
+                        <div class="row" data-id ="{{post.id}}">
+                            <div class = "titre" >{{post.title}}</div>
+                            <div class = "auteur" >{{post.owner.fullname}}</div>
+                            <div class = "date" >{{post.date|date("m/d/Y")}}</div>
+                            <div class = "icon delete"><a href ="#"><i class="fas fa-times-circle fa-lg" style="color:Tomato" title="Supprimer" ></i></a></div>
+                            <div class = "icon informations"><a href ="#"><i class="fas fa-info-circle fa-lg" style="color:blue" title="Plus d'informations"></i></a></div>
+                            <div class = "icon update"><a href ="#"><i class="fas fa-edit fa-lg" style="color:orange" title="Modifier"></i></a></div>
+                            </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+     </div>
+    </div>
+    {% endblock %}
 
 {% block javascripts %}
 
+<script>
+    /* Modifier un article */
+    $(document).on( "click",'.update', function() {
+        var postID = $(this).parent().attr("data-id");
+        $.confirm({
+            boxWidth: '90%',
+            useBootstrap: false,
+            buttons: {
 
+                Annuler: function () {
+                    
+                },
+            },
+            content: function () {
+                var self = this;
+                return $.ajax({
+                    url: "{{path('prepareUpdate_post')}}",
+                    dataType: 'json',
+                    
+                    data : {
+                        postID : postID,
+                    },
+                    method: 'post'
+                }).done(function (response) {
+            
+                    
+                    self.setContent(response.formulaire);
+                    /*
+                    self.setContent(self.content + '<br>Version: ' + response.version); // appending
+                    */
+                    self.setTitle("Modification de l'article : "+response.title);
+
+                }).fail(function(){
+                    self.setContent('Something went wrong.');
+                });
+            },
+            confirm: function(){
+                this.setContent( this.content + '<h4>Adding a new sentence.</h4>');
+                return false; // prevent modal from closing
+            }
+        });
+    });
+
+    $(document).on( "click",'.delete', function() {
+        var post_id = $(this).parent().attr("data-id");
+        var nom = $(this).parent().find(".titre").text();
+
+        $.confirm({
+            title: 'Supprimer ?',
+            content: "Etes vous sûr de vouloir supprimer l'article "+nom+" ?",
+                   
+
+            boxWidth: '90%',
+            useBootstrap: false,
+            buttons: {
+                Confirmer: function () {
+                    $.ajax({
+                        url: "{{ path("delete_post") }}",
+                        method: "post",
+                        data: {
+                            post_id:post_id,
+                            
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            $.confirm({
+                                title: 'Une erreur a été détectée',
+                                content:"Veuillez contacter l'administrateur en cas de récidive",
+
+
+                                boxWidth: '90%',
+                                useBootstrap: false,
+                                type: 'red',
+                                typeAnimated: true,
+
+                                buttons: {
+                                    tryAgain: {
+                                        text: 'Ok',
+                                        btnClass: 'btn-red',
+                                        action: function(){
+                                        }
+                                    },
+                                }
+                            });
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            $(".right-column").replaceWith(response.html);
+                            //initSlider();
+                            recalculatePageHeight();
+                        }
+                    })
+                },
+                Annuler: function () {
+                    
+                },
+            }
+        });
+
+    });
+
+
+
+    
+
+    /* Initialisation de la zone de saisie */
     var toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike', 'link'],        // toggled buttons
         ['blockquote'],           
@@ -42,29 +286,223 @@
     ];
 
     var quill = new Quill('#editor-container', {
-    modules: {
-        toolbar:toolbarOptions
-    },
-    placeholder: 'Composez votre article ... ',
-    theme: 'snow'
+        modules: {
+            toolbar:toolbarOptions
+        },
+        placeholder: 'Composez votre article ... ',
+        theme: 'snow'
     });
 
+    /* DROPZONE */
+    Dropzone.autoDiscover = false;
+    var myDropzone;
+    $(document).ready(function() {
+        new Dropzone('#fileInput', { 
+            url: "{{path('create_post')}}",
+            uploadMultiple: true,
+            maxFilesize: 5,
+            parallelUploads: 10,
+            maxFiles: 100,
+            addRemoveLinks: true,
+            acceptedFiles: 'image/jpeg,image/png,image/png,image/gif',
+            autoProcessQueue: false,
+            paramName: "files",
+            dictInvalidFileType : "Le format du fichier est invalide",
+            dictDefaultMessage : "Cliquez pour ajouter une image à votre article",
+            dictRemoveFile : "Supprimer",
+            dictFileTooBig : "Fichier trop volumineux",
+            init: function () {
+                myDropzone = this;
+                /* Lancement du formulaire */
+                $("#submit-all").click(function (e) {
+                    e.preventDefault();
+                    /* Message de confirmation */
+                    var content ="<p>Valider l'ajout de ces images ?</p><br><ul>";
+                    for (var i = 0; i < myDropzone.files.length; i++) {
+                        content+="<li>"+myDropzone.files[i].name+"</li>";
+                    }
+                    content+= "</ul><br><p>Total : "+myDropzone.files.length+"</p>";
+
+                    /* Vérification de tous les champs */
+                    var allOk=true;
+                    if($('#post_title').val()=="" && allOk){
+                        simpleAdvert("Oops !","Vous n'avez saisi de titre !");
+                        allOk=false;
+                    }
+                    if(quill.getLength()<=1 && allOk ){
+                        simpleAdvert("Oops !","Vous n'avez saisi de contenu !");
+                        allOk=false;
+                    }
+                    if(allOk){
+                        $.confirm({
+                            title: 'Confirmation !',
+                            content: content,
+
+                            boxWidth: '90%',
+                            useBootstrap: false,
+                            
+                            buttons: {
+                                Confirmer: function () {
+                               
+                                    if (myDropzone.getQueuedFiles().length > 0) {                        
+                                        myDropzone.processQueue();  
+                                    }else {                       
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "{{ path('create_post') }}",
+                                            data: {
+                                                post_title: $('#post_title').val(),
+                                                post_content :  $("#editor-container .ql-editor").html(),
+                                            },
+                                            success: function (response) {
+                                                 console.log(response);
+                                                $(".right-column").replaceWith(response.html);
+                                                //initSlider();
+                                                recalculatePageHeight();
+                                            }
+                                        });
+                                    }   
+     
+                                },
+                                Annuler: function () {
+                                    
+                                },
+                            }
+                        });
+                    }
+                    
+                
+                }); 
+
+                /* Retour de l'ajax */
+                var files = [];
+                var filesError = [];
+                myDropzone.on('success', function (e,response) {
+                    $(".right-column").replaceWith(response.html);
+                                            
+                                                
+                    filesError=response.notUploaded;
+                    files=response.uploaded;
+                    recalculatePageHeight();
+
+                    
+                });
+                myDropzone.on('error', function (e,response) {
+                    $.confirm({
+                            title: 'Une erreur a été détectée',
+                            content:"Veuillez contacter l'administrateur en cas de récidive",
+
+
+                            boxWidth: '90%',
+                            useBootstrap: false,
+                            type: 'red',
+                            typeAnimated: true,
+
+                            buttons: {
+                                tryAgain: {
+                                    text: 'Ok',
+                                    btnClass: 'btn-red',
+                                    action: function(){
+                                    }
+                                },
+                            }
+                        });
+                });
+                /* Recalcul de la taille de la sidebar lors de l'ajout d'une image */
+                myDropzone.on('addedfile', function (e,response) {
+                        recalculatePageHeight();
+                });
+
+                /* A la fin de l'upload des fichier (pas de l'ajax) */
+                this.on("complete", function (file) {
+                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                        //supression des fichiers
+                        myDropzone.removeAllFiles();
+                        //si messages d'erreur
+                        if(filesError.length !=0){
+                            //création du message d'erreur
+                            var content ="<p>Les images suivantes n'ont pas pu être ajoutées :</p><br><ul>";
+                            for (var i = 0; i < filesError.length; i++) {
+                                content+="<li>"+filesError[i]+"</li>";
+                            }
+                            content+= "</ul><br><p>Total : "+filesError.length+"</p>";
+                            $.confirm({
+                                title: 'Une erreur a été détectée',
+                                content:content,
+
+
+                                boxWidth: '90%',
+                                useBootstrap: false,
+                                type: 'red',
+                                typeAnimated: true,
+
+                                buttons: {
+                                    tryAgain: {
+                                        text: 'Ok',
+                                        btnClass: 'btn-red',
+                                        action: function(){
+                                        }
+                                    },
+                                }
+                            });
+                        }
+                        if(files.length !=0){
+                            //création du message de confirmation
+                            var content ="<p>Les images suivantes ont être ajoutées :</p><br><ul>";
+                            for (var i = 0; i < files.length; i++) {
+                                content+="<li>"+files[i]+"</li>";
+                            }
+                            content+= "</ul><br><p>Total : "+files.length+"</p>";
+                            $.confirm({
+                                title: 'Récapitulatif',
+                                content:content,
+
+
+                                boxWidth: '90%',
+                                useBootstrap: false,
+                                type: 'green',
+                                typeAnimated: true,
+
+                                buttons: {
+                                    tryAgain: {
+                                        text: 'Ok',
+                                        btnClass: 'btn-green',
+                                        action: function(){
+                                        }
+                                    },
+                                }
+                            });
+                        }
+                        //reset des tableaux
+                        files = [];
+                        filesError = [];
+                    }
+                });
+            },
+            //ajout des différentes data dans la requète ajax
+            sending: function (file, xhr, formData) {
+                
+                formData.append("post_title", $('#post_title').val());
+                formData.append("post_content", $("#editor-container .ql-editor").html());
+            },
+        })
+    })
+    /* AUTRE*/
     $( document ).ready(function() {
-        $("textarea#post_content").val("yeaah").hide();
+   
+        recalculatePageHeight();
     });
 
     $('form[name="create_post"]').submit(function(e) {
-        
         e.preventDefault();
         $("textarea#post_content").val($("#editor-container .ql-editor").html());
         var formSerialize = $(this).serialize();
-
         $.ajax({
             type: "POST",
             url: "{{ path('create_post') }}",
             data: formSerialize,
             success: function (result) {
-                console.log(result);
+    
                 if (result.code === 200) {
                     // refresh current url to see student
                 } else {
@@ -73,4 +511,6 @@
             }
         });
     });
+</script>
+   
 {% endblock %}

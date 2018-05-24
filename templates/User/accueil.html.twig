@@ -1,0 +1,423 @@
+{% extends 'Layout/user_layout.html.twig' %}
+
+
+
+
+{% block stylesheets %}
+<style>
+/*NAVIGATION RAPIDE - ICONS*/
+
+.container-all-icon{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  
+
+}
+
+.container-icon svg{
+	height : 50px;
+}
+.container-icon span{
+	margin-top : 10px;
+
+}
+.container-icon:hover span{
+	-webkit-transition: color 0.1s ease;
+	-moz-transition: color 0.1s ease;
+	-ms-transition: color 0.1s ease;
+	-o-transition: color 0.1s ease;
+	transition: color 0.1s ease;
+  color : #FFF;
+  
+
+
+}
+.container-icon:hover{
+  cursor: pointer;
+  -webkit-transition: background-color 0.1s ease;
+	-moz-transition: background-color 0.1s ease;
+	-ms-transition: background-color 0.1s ease;
+	-o-transition: background-color 0.1s ease;
+	transition: background-color 0.5s ease;
+	background-color : #FFA500;
+
+}
+
+.container-icon:hover svg{
+	-webkit-transition: fill 0.1s ease;
+	-moz-transition: fill 0.1s ease;
+	-ms-transition: fill 0.1s ease;
+	-o-transition: fill 0.1s ease;
+	transition: fill 0.1s ease;
+	fill : #FFF;
+}
+
+.container-navigation-rapide{
+  display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-bottom : 30px;
+  
+  }
+  
+  .container-navigation-rapide a {
+    text-decoration: none;
+    color:#000;
+    }
+  .container-icon{
+  
+    flex: 1 0 0;
+    display : flex;
+    flex-direction: column;
+    align-items: center;
+    margin : 0 30px 0 30px ;
+    padding : 10px 30px 0 30px;
+  
+    border-radius: 10px 10px 10px 10px;
+  -moz-border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  }
+/*AGENDA*/
+.titreCategorie{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.titreCategorie a {
+  margin : 15px;
+  padding-top : 15px;
+  font-size:  10px;
+  line-height: 10px;
+  text-decoration: none;
+  color:#000;
+}
+.evenement{
+  display: flex;
+  flex-direction: row;
+}
+.date{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin : 5px 15px 5px 15px;
+
+  flex: 0 0 80px;
+  background-color: #FFA500;
+  height: 80px;
+  
+  max-width: 80px;
+
+  -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+.date .chiffre {
+  margin: 0px;
+  margin-top: 10px;
+  font-size: 60px;
+  
+}
+.date .mois {
+  margin: 0px;
+  margin-top: 10px;
+}
+
+.contenu{
+  flex: 7 0 0px;
+  height: 80px;
+  margin : 5px 15px 5px 0;
+  
+}
+.inverse .contenu {
+  margin : 5px 0px 5px 15px;
+  text-align: right;
+}
+
+.contenu .titre{
+  margin: 0px;
+  height : 20px;
+  line-Height: 20px;
+  font-weight: bold;
+ 
+}
+.contenu .description{
+  margin: 0px;
+  line-Height: 20px;
+  height : 50px;
+  font-size:  15px;
+}
+.contenu .voirplus{
+  margin: 0px;
+  font-size: 10px;
+  line-Height: 10px;
+}
+
+
+
+.agenda h2{
+  margin : 15px;
+  padding : 0px;
+}
+
+
+
+/*SLIDER*/
+ .changerImage{
+  margin-top: 10px;
+  position : absolute;
+}
+
+.changerImage svg:nth-child(1){
+  transform: rotate(180deg);
+
+}
+.changerImage svg{
+  fill :lightgrey;
+  cursor: pointer;
+}
+
+.container {
+	display: flex;
+  flex-direction: row;
+	margin-top : 30px;
+}
+.content{
+  flex: 5 0 0px;
+}
+.aside{
+  flex: 3 0 0px;
+	padding-top : 20px;
+}
+.ug-tile-navigation-wrapper{
+	top: 176px !important;
+}
+
+
+</style>
+
+
+{% endblock %}
+
+{% block h1 %}Actualités{% endblock %}
+
+{% block body %}
+
+<div class="pageTitle">
+      <div>
+            <h1>Bienvenue sur le site de la Fraternelle !</h1>
+      </div>
+  </div>
+	
+
+ <div class = "container">
+ 
+		<div class = "content">
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam lobortis nec sapien at vehicula. Aenean convallis enim vitae interdum auctor. Sed porta rhoncus enim, et convallis ante aliquet a. Mauris feugiat nec mi nec consequat. Suspendisse vestibulum aliquet enim a rhoncus. Nullam sapien turpis, varius et risus sed, fringilla dignissim ipsum.</p>		
+
+		</div>
+		<div class = "aside">
+			<div id="gallery" style="display:none;">
+				<img alt="Image 2 Title" src="https://unsplash.it/300/500/?random"
+					data-image="https://unsplash.it/300/500/?random.jpg"
+					data-description="Image 2 Description">
+				
+				<img alt="Image 2 Title" src="https://unsplash.it/300/500/?random"
+					data-image="https://unsplash.it/300/500/?random.jpg"
+					data-description="Image 2 Description">
+					<img alt="Image 2 Title" src="https://unsplash.it/500/300/?random"
+					data-image="https://unsplash.it/500/300/?random"
+					data-description="Image 2 Description">
+			</div>
+			
+		</div>
+</div>
+
+<div class="container-all-icon">
+		<div class = "container-navigation-rapide">
+			<a href="#musique">
+				<div class="container-icon">	
+					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0" y="0" viewBox="0 0 512.01 512.01" xml:space="preserve" enable-background="new 0 0 512.006 512.006">
+						<ellipse transform="matrix(0.7071 -0.7071 0.7071 0.7071 62.4777 325.8028)" cx="424.52" cy="87.48" rx="30" ry="120"/>
+						<path d="M382.09 129.92c-18.58-18.58-41.42-44.29-57.09-70.15v29.24c0 25.48-9.68 51.71-22.79 72.83 33.42-3.97 67.93 5.94 94.48 29.96 7.99-1.46 18.08-3.78 26.32-3.78h29.24C426.38 172.34 400.67 148.5 382.09 129.92z"/>
+						<path d="M390.7 397.08l-10.61-10.6 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.22 0C396.56 412.43 396.56 402.94 390.7 397.08z"/>
+						<path d="M348.27 439.51l-10.6-10.61 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.21 0C354.14 454.86 354.14 445.37 348.27 439.51z"/>
+						<path d="M380.09 216.77c-35.15-35.15-92.13-35.15-127.28 0L36.22 433.36l-10.6-10.6c-5.86-5.86-15.35-5.86-21.21 0 -5.86 5.86-5.86 15.35 0 21.21 3.56 3.56 60.87 60.87 63.64 63.64 5.86 5.86 15.35 5.86 21.21 0 5.86-5.86 5.86-15.35 0-21.21L78.65 475.79l131.74-131.74 42.43 42.43 -21.21 21.21c-11.71 11.72-30.71 11.72-42.43 0l-42.43 42.43c35.15 35.15 92.13 35.15 127.28 0l106.07-106.07C415.24 308.9 415.24 251.92 380.09 216.77zM295.24 344.05l-21.21 21.21 -42.43-42.43 21.21-21.21 42.43 42.43V344.05zM337.67 301.62l-21.21 21.22v0l-42.43-42.43 21.21-21.21c11.72-11.71 30.71-11.71 42.43 0C349.38 270.91 349.38 289.91 337.67 301.62z"/>
+						<polygon points="68.04 507.61 68.04 507.61 68.04 507.61 "/>
+						<path d="M210.39 174.34l21.21 21.22 21.22-21.21 -21.21-21.21 10.61-10.6c5.86-5.86 5.86-15.35 0-21.21 -5.86-5.86-15.35-5.86-21.21 0L51.29 291.02c-5.86 5.86-5.86 15.35 0 21.21 5.86 5.86 15.35 5.86 21.21 0l10.61-10.61v0l21.21 21.21 21.21-21.21 -21.21-21.21v0l21.21-21.21 21.21 21.22 21.22-21.21 -21.21-21.21 21.22-21.21v0l21.21 21.21 21.21-21.21 -21.21-21.21v0L210.39 174.34z"/>
+					</svg>
+					<span>Musique</span>
+				</div>
+			</a>
+			<a href="#twirling">
+				<div class="container-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0" y="0" viewBox="0 0 512.01 512.01" xml:space="preserve" enable-background="new 0 0 512.006 512.006">
+						<ellipse transform="matrix(0.7071 -0.7071 0.7071 0.7071 62.4777 325.8028)" cx="424.52" cy="87.48" rx="30" ry="120"/>
+						<path d="M382.09 129.92c-18.58-18.58-41.42-44.29-57.09-70.15v29.24c0 25.48-9.68 51.71-22.79 72.83 33.42-3.97 67.93 5.94 94.48 29.96 7.99-1.46 18.08-3.78 26.32-3.78h29.24C426.38 172.34 400.67 148.5 382.09 129.92z"/>
+						<path d="M390.7 397.08l-10.61-10.6 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.22 0C396.56 412.43 396.56 402.94 390.7 397.08z"/>
+						<path d="M348.27 439.51l-10.6-10.61 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.21 0C354.14 454.86 354.14 445.37 348.27 439.51z"/>
+						<path d="M380.09 216.77c-35.15-35.15-92.13-35.15-127.28 0L36.22 433.36l-10.6-10.6c-5.86-5.86-15.35-5.86-21.21 0 -5.86 5.86-5.86 15.35 0 21.21 3.56 3.56 60.87 60.87 63.64 63.64 5.86 5.86 15.35 5.86 21.21 0 5.86-5.86 5.86-15.35 0-21.21L78.65 475.79l131.74-131.74 42.43 42.43 -21.21 21.21c-11.71 11.72-30.71 11.72-42.43 0l-42.43 42.43c35.15 35.15 92.13 35.15 127.28 0l106.07-106.07C415.24 308.9 415.24 251.92 380.09 216.77zM295.24 344.05l-21.21 21.21 -42.43-42.43 21.21-21.21 42.43 42.43V344.05zM337.67 301.62l-21.21 21.22v0l-42.43-42.43 21.21-21.21c11.72-11.71 30.71-11.71 42.43 0C349.38 270.91 349.38 289.91 337.67 301.62z"/>
+						<polygon points="68.04 507.61 68.04 507.61 68.04 507.61 "/>
+						<path d="M210.39 174.34l21.21 21.22 21.22-21.21 -21.21-21.21 10.61-10.6c5.86-5.86 5.86-15.35 0-21.21 -5.86-5.86-15.35-5.86-21.21 0L51.29 291.02c-5.86 5.86-5.86 15.35 0 21.21 5.86 5.86 15.35 5.86 21.21 0l10.61-10.61v0l21.21 21.21 21.21-21.21 -21.21-21.21v0l21.21-21.21 21.21 21.22 21.22-21.21 -21.21-21.21 21.22-21.21v0l21.21 21.21 21.21-21.21 -21.21-21.21v0L210.39 174.34z"/>
+					</svg>
+					<span>Twirling</spanp>
+				</div>
+			</a>
+			<a href="">
+				<div class="container-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0" y="0" viewBox="0 0 512.01 512.01" xml:space="preserve" enable-background="new 0 0 512.006 512.006">
+						<ellipse transform="matrix(0.7071 -0.7071 0.7071 0.7071 62.4777 325.8028)" cx="424.52" cy="87.48" rx="30" ry="120"/>
+						<path d="M382.09 129.92c-18.58-18.58-41.42-44.29-57.09-70.15v29.24c0 25.48-9.68 51.71-22.79 72.83 33.42-3.97 67.93 5.94 94.48 29.96 7.99-1.46 18.08-3.78 26.32-3.78h29.24C426.38 172.34 400.67 148.5 382.09 129.92z"/>
+						<path d="M390.7 397.08l-10.61-10.6 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.22 0C396.56 412.43 396.56 402.94 390.7 397.08z"/>
+						<path d="M348.27 439.51l-10.6-10.61 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.21 0C354.14 454.86 354.14 445.37 348.27 439.51z"/>
+						<path d="M380.09 216.77c-35.15-35.15-92.13-35.15-127.28 0L36.22 433.36l-10.6-10.6c-5.86-5.86-15.35-5.86-21.21 0 -5.86 5.86-5.86 15.35 0 21.21 3.56 3.56 60.87 60.87 63.64 63.64 5.86 5.86 15.35 5.86 21.21 0 5.86-5.86 5.86-15.35 0-21.21L78.65 475.79l131.74-131.74 42.43 42.43 -21.21 21.21c-11.71 11.72-30.71 11.72-42.43 0l-42.43 42.43c35.15 35.15 92.13 35.15 127.28 0l106.07-106.07C415.24 308.9 415.24 251.92 380.09 216.77zM295.24 344.05l-21.21 21.21 -42.43-42.43 21.21-21.21 42.43 42.43V344.05zM337.67 301.62l-21.21 21.22v0l-42.43-42.43 21.21-21.21c11.72-11.71 30.71-11.71 42.43 0C349.38 270.91 349.38 289.91 337.67 301.62z"/>
+						<polygon points="68.04 507.61 68.04 507.61 68.04 507.61 "/>
+						<path d="M210.39 174.34l21.21 21.22 21.22-21.21 -21.21-21.21 10.61-10.6c5.86-5.86 5.86-15.35 0-21.21 -5.86-5.86-15.35-5.86-21.21 0L51.29 291.02c-5.86 5.86-5.86 15.35 0 21.21 5.86 5.86 15.35 5.86 21.21 0l10.61-10.61v0l21.21 21.21 21.21-21.21 -21.21-21.21v0l21.21-21.21 21.21 21.22 21.22-21.21 -21.21-21.21 21.22-21.21v0l21.21 21.21 21.21-21.21 -21.21-21.21v0L210.39 174.34z"/>
+					</svg>
+					<span>Twirling</spanp>
+				</div>
+			</a>	
+	</div>
+	<div class = "container-navigation-rapide">
+		<a href="">
+			<div class="container-icon">
+				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0" y="0" viewBox="0 0 512.01 512.01" xml:space="preserve" enable-background="new 0 0 512.006 512.006">
+					<ellipse transform="matrix(0.7071 -0.7071 0.7071 0.7071 62.4777 325.8028)" cx="424.52" cy="87.48" rx="30" ry="120"/>
+					<path d="M382.09 129.92c-18.58-18.58-41.42-44.29-57.09-70.15v29.24c0 25.48-9.68 51.71-22.79 72.83 33.42-3.97 67.93 5.94 94.48 29.96 7.99-1.46 18.08-3.78 26.32-3.78h29.24C426.38 172.34 400.67 148.5 382.09 129.92z"/>
+					<path d="M390.7 397.08l-10.61-10.6 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.22 0C396.56 412.43 396.56 402.94 390.7 397.08z"/>
+					<path d="M348.27 439.51l-10.6-10.61 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.21 0C354.14 454.86 354.14 445.37 348.27 439.51z"/>
+					<path d="M380.09 216.77c-35.15-35.15-92.13-35.15-127.28 0L36.22 433.36l-10.6-10.6c-5.86-5.86-15.35-5.86-21.21 0 -5.86 5.86-5.86 15.35 0 21.21 3.56 3.56 60.87 60.87 63.64 63.64 5.86 5.86 15.35 5.86 21.21 0 5.86-5.86 5.86-15.35 0-21.21L78.65 475.79l131.74-131.74 42.43 42.43 -21.21 21.21c-11.71 11.72-30.71 11.72-42.43 0l-42.43 42.43c35.15 35.15 92.13 35.15 127.28 0l106.07-106.07C415.24 308.9 415.24 251.92 380.09 216.77zM295.24 344.05l-21.21 21.21 -42.43-42.43 21.21-21.21 42.43 42.43V344.05zM337.67 301.62l-21.21 21.22v0l-42.43-42.43 21.21-21.21c11.72-11.71 30.71-11.71 42.43 0C349.38 270.91 349.38 289.91 337.67 301.62z"/>
+					<polygon points="68.04 507.61 68.04 507.61 68.04 507.61 "/>
+					<path d="M210.39 174.34l21.21 21.22 21.22-21.21 -21.21-21.21 10.61-10.6c5.86-5.86 5.86-15.35 0-21.21 -5.86-5.86-15.35-5.86-21.21 0L51.29 291.02c-5.86 5.86-5.86 15.35 0 21.21 5.86 5.86 15.35 5.86 21.21 0l10.61-10.61v0l21.21 21.21 21.21-21.21 -21.21-21.21v0l21.21-21.21 21.21 21.22 21.22-21.21 -21.21-21.21 21.22-21.21v0l21.21 21.21 21.21-21.21 -21.21-21.21v0L210.39 174.34z"/>
+				</svg>
+				<span>Twirling</spanp>
+			</div>
+		</a>	
+		<a href="">
+			<div class="container-icon">
+				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0" y="0" viewBox="0 0 512.01 512.01" xml:space="preserve" enable-background="new 0 0 512.006 512.006">
+					<ellipse transform="matrix(0.7071 -0.7071 0.7071 0.7071 62.4777 325.8028)" cx="424.52" cy="87.48" rx="30" ry="120"/>
+					<path d="M382.09 129.92c-18.58-18.58-41.42-44.29-57.09-70.15v29.24c0 25.48-9.68 51.71-22.79 72.83 33.42-3.97 67.93 5.94 94.48 29.96 7.99-1.46 18.08-3.78 26.32-3.78h29.24C426.38 172.34 400.67 148.5 382.09 129.92z"/>
+					<path d="M390.7 397.08l-10.61-10.6 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.22 0C396.56 412.43 396.56 402.94 390.7 397.08z"/>
+					<path d="M348.27 439.51l-10.6-10.61 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.21 0C354.14 454.86 354.14 445.37 348.27 439.51z"/>
+					<path d="M380.09 216.77c-35.15-35.15-92.13-35.15-127.28 0L36.22 433.36l-10.6-10.6c-5.86-5.86-15.35-5.86-21.21 0 -5.86 5.86-5.86 15.35 0 21.21 3.56 3.56 60.87 60.87 63.64 63.64 5.86 5.86 15.35 5.86 21.21 0 5.86-5.86 5.86-15.35 0-21.21L78.65 475.79l131.74-131.74 42.43 42.43 -21.21 21.21c-11.71 11.72-30.71 11.72-42.43 0l-42.43 42.43c35.15 35.15 92.13 35.15 127.28 0l106.07-106.07C415.24 308.9 415.24 251.92 380.09 216.77zM295.24 344.05l-21.21 21.21 -42.43-42.43 21.21-21.21 42.43 42.43V344.05zM337.67 301.62l-21.21 21.22v0l-42.43-42.43 21.21-21.21c11.72-11.71 30.71-11.71 42.43 0C349.38 270.91 349.38 289.91 337.67 301.62z"/>
+					<polygon points="68.04 507.61 68.04 507.61 68.04 507.61 "/>
+					<path d="M210.39 174.34l21.21 21.22 21.22-21.21 -21.21-21.21 10.61-10.6c5.86-5.86 5.86-15.35 0-21.21 -5.86-5.86-15.35-5.86-21.21 0L51.29 291.02c-5.86 5.86-5.86 15.35 0 21.21 5.86 5.86 15.35 5.86 21.21 0l10.61-10.61v0l21.21 21.21 21.21-21.21 -21.21-21.21v0l21.21-21.21 21.21 21.22 21.22-21.21 -21.21-21.21 21.22-21.21v0l21.21 21.21 21.21-21.21 -21.21-21.21v0L210.39 174.34z"/>
+				</svg>
+				<span>Twirling</spanp>
+			</div>
+		</a>	
+		<a href="">
+			<div class="container-icon">
+				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0" y="0" viewBox="0 0 512.01 512.01" xml:space="preserve" enable-background="new 0 0 512.006 512.006">
+					<ellipse transform="matrix(0.7071 -0.7071 0.7071 0.7071 62.4777 325.8028)" cx="424.52" cy="87.48" rx="30" ry="120"/>
+					<path d="M382.09 129.92c-18.58-18.58-41.42-44.29-57.09-70.15v29.24c0 25.48-9.68 51.71-22.79 72.83 33.42-3.97 67.93 5.94 94.48 29.96 7.99-1.46 18.08-3.78 26.32-3.78h29.24C426.38 172.34 400.67 148.5 382.09 129.92z"/>
+					<path d="M390.7 397.08l-10.61-10.6 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.22 0C396.56 412.43 396.56 402.94 390.7 397.08z"/>
+					<path d="M348.27 439.51l-10.6-10.61 -21.21 21.21 10.61 10.61c5.86 5.86 15.35 5.86 21.21 0C354.14 454.86 354.14 445.37 348.27 439.51z"/>
+					<path d="M380.09 216.77c-35.15-35.15-92.13-35.15-127.28 0L36.22 433.36l-10.6-10.6c-5.86-5.86-15.35-5.86-21.21 0 -5.86 5.86-5.86 15.35 0 21.21 3.56 3.56 60.87 60.87 63.64 63.64 5.86 5.86 15.35 5.86 21.21 0 5.86-5.86 5.86-15.35 0-21.21L78.65 475.79l131.74-131.74 42.43 42.43 -21.21 21.21c-11.71 11.72-30.71 11.72-42.43 0l-42.43 42.43c35.15 35.15 92.13 35.15 127.28 0l106.07-106.07C415.24 308.9 415.24 251.92 380.09 216.77zM295.24 344.05l-21.21 21.21 -42.43-42.43 21.21-21.21 42.43 42.43V344.05zM337.67 301.62l-21.21 21.22v0l-42.43-42.43 21.21-21.21c11.72-11.71 30.71-11.71 42.43 0C349.38 270.91 349.38 289.91 337.67 301.62z"/>
+					<polygon points="68.04 507.61 68.04 507.61 68.04 507.61 "/>
+					<path d="M210.39 174.34l21.21 21.22 21.22-21.21 -21.21-21.21 10.61-10.6c5.86-5.86 5.86-15.35 0-21.21 -5.86-5.86-15.35-5.86-21.21 0L51.29 291.02c-5.86 5.86-5.86 15.35 0 21.21 5.86 5.86 15.35 5.86 21.21 0l10.61-10.61v0l21.21 21.21 21.21-21.21 -21.21-21.21v0l21.21-21.21 21.21 21.22 21.22-21.21 -21.21-21.21 21.22-21.21v0l21.21 21.21 21.21-21.21 -21.21-21.21v0L210.39 174.34z"/>
+				</svg>
+				<span>Twirling</spanp>
+			</div>
+		</a>		
+	</div>
+	</div>
+
+
+
+
+<div id="musique" class="centre">
+		<div class="partie">
+				<h2>Musique</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel ex ac turpis volutpat consequat. Donec tristique vestibulum eros non luctus. Sed in leo quis nibh consectetur fermentum. Phasellus vestibulum porta est a fringilla. Donec imperdiet eros nec ligula luctus consequat. Aliquam erat volutpat. Etiam id pellentesque nisl, at tempor arcu. Praesent efficitur augue mattis convallis consectetur. Nullam lobortis nec sapien at vehicula. Aenean convallis enim vitae interdum auctor. Sed porta rhoncus enim, et convallis ante aliquet a. Mauris feugiat nec mi nec consequat. Suspendisse vestibulum aliquet enim a rhoncus. Nullam sapien turpis, varius et risus sed, fringilla dignissim ipsum.</p>		
+		</div>
+		<div class="partie columns">
+			<div class="column">
+				<h3>Varius natoque</h3>
+				<p>Integer a rhoncus nunc. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam scelerisque dapibus ante, et interdum purus accumsan ac. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque ac purus blandit, mollis nisl ut, lobortis tellus.</p>
+			</div>
+			<div class="column image">
+					<img src="https://cdn.arstechnica.net/wp-content/uploads/2016/02/5718897981_10faa45ac3_b-640x624.jpg" alt="Smiley face">
+
+			</div>
+			<div class="column">
+				<h3>Nec maximus</h3>
+				<p>Ut lorem ex, aliquam laoreet cursus non, condimentum ac dolor. Aenean nisl diam, bibendum nec maximus non, semper at ante. Donec ut purus vel ex vehicula egestas id in metus.</p>
+			</div>
+		</div>
+		<div class="partie columns">
+				<div class="column justify-center orange">
+					<h3>Varius natoque</h3>
+					<p>Integer a rhoncus nunc. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam scelerisque dapibus ante, et interdum purus accumsan ac. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque ac purus blandit, mollis nisl ut, lobortis tellus.</p>
+				</div>
+				<div class="column image">
+						<img src="https://www.reduceimages.com/img/image-after.jpg" alt="Smiley face">
+				</div>
+			</div>
+</div>
+<div id="twirling" class="centre">
+		<div class="partie">
+				<h2>Twirling</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel ex ac turpis volutpat consequat. Donec tristique vestibulum eros non luctus. Sed in leo quis nibh consectetur fermentum. Phasellus vestibulum porta est a fringilla. Donec imperdiet eros nec ligula luctus consequat. Aliquam erat volutpat. Etiam id pellentesque nisl, at tempor arcu. Praesent efficitur augue mattis convallis consectetur. Nullam lobortis nec sapien at vehicula. Aenean convallis enim vitae interdum auctor. Sed porta rhoncus enim, et convallis ante aliquet a. Mauris feugiat nec mi nec consequat. Suspendisse vestibulum aliquet enim a rhoncus. Nullam sapien turpis, varius et risus sed, fringilla dignissim ipsum.</p>		
+		</div>
+		<div class="partie columns">	
+			<div class="column image">
+					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1ouJRTKivYp-IJF905P_GFgi7HU6Kt9qbDrSkPxCUZEbizo_Xyg" alt="Smiley face">
+			</div>
+			<div class="column">
+					<h3>Varius natoque</h3>
+					<p>Integer a rhoncus nunc. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam scelerisque dapibus ante, et interdum purus accumsan ac. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque ac purus blandit, mollis nisl ut, lobortis tellus.</p>
+				</div>
+		</div>
+		<div class="partie columns">	
+				<div class="column">
+						<h3>Varius natoque</h3>
+						<p>Integer a rhoncus nunc. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam scelerisque dapibus ante, et interdum purus accumsan ac. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque ac purus blandit, mollis nisl ut, lobortis tellus.</p>
+				</div>
+				<div class="column orange">
+						<h3>Varius tellus</h3>
+						<p>Vestibulum velit tellus, tempor sit amet vestibulum nec, consequat ut ante. Fusce mollis tortor quis risus cursus aliquam. Quisque id justo sit amet velit suscipit tempus sagittis vel tellus</p>
+				</div>
+				<div class="column">
+						<h3>Maecenas ullamcorper</h3>
+						<p>Nam id erat a urna maximus suscipit quis a nunc. Morbi tincidunt, diam vel rhoncus aliquet, eros quam scelerisque dolor, in tincidunt est ligula sed dui. Cras id rhoncus orci, sed euismod orci. Fusce id vestibulum justo. Phasellus eros arcu, ultrices sit amet pharetra et, sagittis a nisi. Nam non ornare quam, sed luctus nisi. </p>
+				</div>
+		</div>
+        </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/unitegallery/1.7.40/themes/carousel/ug-theme-carousel.min.js'></script> 
+
+<script>
+		jQuery("#gallery").unitegallery({
+				carousel_space_between_tiles:10,
+		});
+
+	//https://wprock.fr/blog/smooth-scrolling-jquery/
+		$(function() {
+    /**
+    * Smooth scrolling to page anchor on click
+    **/
+    $("a[href*='#']:not([href='#'])").click(function() {
+        if (
+            location.hostname == this.hostname
+            && this.pathname.replace(/^\//,"") == location.pathname.replace(/^\//,"")
+        ) {
+            var anchor = $(this.hash);
+            anchor = anchor.length ? anchor : $("[name=" + this.hash.slice(1) +"]");
+            
+						if ( anchor.length ) {
+                $("html, body").animate( { scrollTop: anchor.offset().top - 90 }, 1000);
+            }
+        }
+    });
+});
+</script>
+   
+{% endblock %}

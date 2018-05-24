@@ -9,6 +9,7 @@
     
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/dropzone.css">
         <link rel="stylesheet" href="{{ asset('css/admin_layout.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/tableaux.css') }}">
 
  {% block stylesheets %}{% endblock %}
 
@@ -20,7 +21,7 @@
         <!-- SELECTRIC.JS -->
         <link rel="stylesheet" href="{{ asset('css/selectric.css') }}">
         
-        <!-- SELECTRIC.JS -->
+        <!-- JQUERY CONFIRM -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
        
        <!-- FONT-AWESOME.JS -->
@@ -30,7 +31,8 @@
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous">
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous">
 
-
+        <!-- DROPZONE -->
+         <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
     </head>
     <body>
     <div class='wrapper'>
@@ -94,7 +96,7 @@
     <!-- SELECTRIC.JS -->
     <script src="https://cdn.jsdelivr.net/npm/selectric@1.13.0/public/jquery.selectric.min.js"></script>
     
-    <!-- SELECTRIC.JS -->
+    <!-- JQUERY CONFIRM -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
 
     <!-- PHOTOSWIPE -->
@@ -122,7 +124,7 @@
 		// On lie l'événement resize à la fonction
 		window.addEventListener('resize', redimensionnement, false);
 
-        {% block javascripts %}{% endblock %}
+       
     </script>
-
+     {% block javascripts %}{% endblock %}
 </html>

@@ -38,11 +38,11 @@ class AdminController extends Controller
      */
     public function post()
     {
-     
-        $post = new Post();
-        $form = $this->createForm(PostType::class, $post);
+        $sections = $this->getDoctrine()
+        ->getRepository(Section::class)
+        ->findAll();
         return $this->render('Admin/actualites.html.twig',array(
-            'form' => $form->createView()    
+            'posts'=>$this->getPosts(15),
         ));
     }
 
@@ -51,48 +51,209 @@ class AdminController extends Controller
      */
     public function createPost(Request $request)
     {
-        
-        $post = new Post();
-        $form = $this->createForm(PostType::class, $post);
-        $form->handleRequest($request);
-        $errors = array();
-        
-        if ($form->isSubmitted()) {
-            $validator = $this->get('validator');
-            $errorsValidator = $validator->validate($post);
+        $em = $this->getDoctrine()->getManager();
+        $files = $request->files->get('files');
 
-            foreach ($errorsValidator as $error) {
-                array_push($errors, $error->getMessage());
+        $count = 0;
+        $images=array();
+ 
+        /* Contrôle des données */
+        
+        $post_title = $request->get('post_title');
+        $post_content = $request->get('post_content');
+
+        $type = $request->get('type');
+        if(!$post_title)return new JsonResponse(array(),500); 
+        if(!$post_content)return new JsonResponse(array(),500);
+
+        
+
+        /*Upload des images*/
+        $filesNotUploaded= array();
+        $filesUploaded= array();
+        $mimeTypes = array('jpeg','jpg','png','gif');
+
+        $section = $this->getDoctrine()->getRepository(Section::class)->find(7);
+
+        if(!empty($files) && $section)
+        {
+            for($count; $count < count($files); $count++)
+            {
+                $message=$files[$count]->guessClientExtension();
+                if(in_array($files[$count]->guessClientExtension(), $mimeTypes)){
+                    $temp=array();
+                    array_push($temp,$files[$count]);
+                    $images=array_merge($images,$this->uploadExec($temp,$section,false));
+                    array_push($filesUploaded,$files[$count]->getClientOriginalName());
+                }else{
+                    array_push($filesNotUploaded,$files[$count]->getClientOriginalName());
+                }
+                    
             }
+        }
+        $post = new Post();
+
+        $post->setOwner($this->getUser());
+        $post->setDate(new DateTime());
+        
+        
+        $post->setTitle($post_title);
+        $post->setContent($post_content);
+       
+        foreach ($images as $image){
+            $post->addImage($image);
+        }
+        $em->persist($post);
+        $em->flush($post);
+        return new JsonResponse(array(
+            'notUploaded'=>$filesNotUploaded,
+            'uploaded'=>$filesUploaded,
+            'html'=>$this->render('Admin/Ajax/displayPostList.html.twig',array("posts" => $this->getPosts(15),'post'=>$post))->getContent(),
+            //'html'=>$this->render('Admin/Ajax/displayImageList.html.twig',array("images" => $this->getImages(15)))->getContent(),
+        ));
+    }
+     /**
+     * @Route("/admin/post/prepareUpdate", name="prepareUpdate_post",methods={"POST"}))
+     */
+    public function prepareUpdatePost(Request $request)
+    {
+        
+        $postID = $request->get('postID');
+        
+        if(!$postID)return new JsonResponse(array(),500); 
+
+        $em = $this->getDoctrine()->getManager();
+        $post = $em->getRepository(Post::class)->find($postID);
+        if(!$post)return new JsonResponse(array(),500); 
+        
+        return new JsonResponse(array(
+            'title'=>$post->getTitle(),
+            
+            'formulaire'=>$this->render('Admin/Ajax/updatePost.html.twig',array("images" => $post->getImages(),'post'=>$post))->getContent(),
+        ));
+    }
+    /**
+     * @Route("/admin/post/update", name="update_post",methods={"POST"}))
+     */
+    public function updatePost(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
 
 
-            if (count($errors) == 0) {
-                $post->setOwner($this->getUser());
-                $post->setDate(new DateTime());
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($post);
+        $count = 0;
+        $images=array();
+        
+        /* Contrôle des données */
+
+        $files = $request->files->get('files');
+        $post_title = $request->get('post_title');
+        $post_content = $request->get('post_content');
+        $post_id = $request->get('post_id');
+        $deleteImageId = $request->get('deleteImageId');
+
+        if(!$post_title)return new JsonResponse(array(),500); 
+        if(!$post_content)return new JsonResponse(array(),500);
+        if(!$post_id)return new JsonResponse(array(),500);
+
+        $post = $this->getDoctrine()->getRepository(Post::class)->find($post_id);
+
+        if(!$post)return new JsonResponse(array(),500);
+        if($post_content=="")return new JsonResponse(array(),500);
+        if($post_title=="")return new JsonResponse(array(),500);
+
+        /*Upload des images*/
+        $filesNotUploaded= array();
+        $filesUploaded= array();
+        $mimeTypes = array('jpeg','jpg','png','gif');
+
+        $section = $this->getDoctrine()->getRepository(Section::class)->find(7);
+
+        if(!empty($files) && $section)
+        {
+            for($count; $count < count($files); $count++)
+            {
+                $message=$files[$count]->guessClientExtension();
+                if(in_array($files[$count]->guessClientExtension(), $mimeTypes)){
+                    $temp=array();
+                    array_push($temp,$files[$count]);
+                    $images=array_merge($images,$this->uploadExec($temp,$section,false));
+                    array_push($filesUploaded,$files[$count]->getClientOriginalName());
+                }else{
+                    array_push($filesNotUploaded,$files[$count]->getClientOriginalName());
+                }
+                    
+            }
+        }     
+        if($deleteImageId != ""){
+            $fileSystem = new Filesystem();
+            $uploadDir = $this->getParameter('images_directory') . DIRECTORY_SEPARATOR . "galery" . DIRECTORY_SEPARATOR;
+
+            $ids = explode(",", $deleteImageId);
+            foreach($ids as $id){
+                $image = $this->getDoctrine()->getRepository(Image::class)->find($id);
+                try {
+                    $fileSystem->remove($uploadDir.$image->getFiles());             
+                  
+                    
+                } catch (IOExceptionInterface $exception) {
+                    echo "An error occurred while creating your directory at ".$exception->getPath();
+                }
+                $post->removeImage($image);
+                $em->remove($image);
                 $em->flush();
-
-                return new JsonResponse(array(
-                    'code' => 200,
-                    'message' => $this->render('Admin/Ajax/createPost.html.twig')->getContent(),
-                    'errors' => array('errors' => array(''))),
-                    200);
             }
 
         }
+        
+        $post->setTitle($post_title);
+        $post->setContent($post_content);
+       
+        foreach ($images as $image){
+            $post->addImage($image);
+        }
+        $em->persist($post);
+        $em->flush($post);
 
         return new JsonResponse(array(
-            'code' => 400,
-            'message' => 'error',
-            'errors' => array('errors' => $errors)),
-            400);
-        
+            'notUploaded'=>$filesNotUploaded,
+            'uploaded'=>$filesUploaded,
+        ));
     }
+    /**
+     * @Route("/admin/post/delete", name="delete_post",methods={"POST"}))
+     */
+    public function deletePost(Request $request)
+    {
+        $fileSystem = new Filesystem();
+        $uploadDir = $this->getParameter('images_directory') . DIRECTORY_SEPARATOR . "galery" . DIRECTORY_SEPARATOR;
+        $em = $this->getDoctrine()->getManager();
+       
+        $post_id = $request->get('post_id');
+        if(!$post_id)return new JsonResponse(array(),500);
 
-    
-    
+        $post=$em->getRepository(Post::class)->find($post_id);
+        if(!$post) return new JsonResponse(array(),500);
 
+ 
+        foreach($post->getImages() as $image){
+            try {
+                $fileSystem->remove($uploadDir.$image->getFiles());              
+                
+            } catch (IOExceptionInterface $exception) {
+                echo "An error occurred while creating your directory at ".$exception->getPath();
+            }
+            $post->removeImage($image);
+            $em->remove($image);
+            $em->flush();
+        }
+        $em->remove($post);
+        $em->flush();
+
+        return new JsonResponse(array(
+            'html'=>$this->render('Admin/Ajax/displayPostList.html.twig',array("posts" => $this->getPosts(15),'post'=>$post))->getContent(),
+
+        ));
+    }
     /**
      * @Route("/admin/image", name="admin_image")
      */
@@ -101,8 +262,6 @@ class AdminController extends Controller
         $sections = $this->getDoctrine()
         ->getRepository(Section::class)
         ->findAll();
-
-
 
         $image = new Image();
         $form = $this->createForm(ImageType::class, $image);
@@ -198,9 +357,8 @@ class AdminController extends Controller
                 if(in_array($files[$count]->guessClientExtension(), $mimeTypes)){
                     $temp=array();
                     array_push($temp,$files[$count]);
-                    $uploaded = $this->uploadExec($temp,$section);
+                    $uploaded = $this->uploadExec($temp,$section,true);
                     array_push($filesUploaded,$files[$count]->getClientOriginalName());
-                    $debug .=$files[$count]->getClientSize()."-----";
                 }else{
                     array_push($filesNotUploaded,$files[$count]->getClientOriginalName());
                 }
@@ -213,7 +371,6 @@ class AdminController extends Controller
 
         return new JsonResponse(array(
             'error'=>$error,
-            'uploaded' => $uploaded,
             'message' => $message,
             'notUploaded'=>$filesNotUploaded,
             'uploaded'=>$filesUploaded,
@@ -221,10 +378,10 @@ class AdminController extends Controller
         ));
     }
 
-    private function uploadExec($args = array(),$section)
+    private function uploadExec($args = array(),$section,$inGallery)
     {
         $count = 0;
-        $image_files = [];
+        $images_uploads = array();
         $doctrine = $this->getDoctrine()->getManager();
 
         $uploadDir = $this->getParameter('images_directory') . DIRECTORY_SEPARATOR . "galery" . DIRECTORY_SEPARATOR;
@@ -236,6 +393,7 @@ class AdminController extends Controller
 
         if(!empty($args) && count($args) > 0)
         {
+            // !!!!!!!!!!!! CETTE BOUCLE NE SERT A RIEN !!!!!!!!!!!!!
             for($count; $count < count($args); $count++)
             {
                 $prettyName = $args[$count]->getClientOriginalName();
@@ -249,28 +407,29 @@ class AdminController extends Controller
                         /*
                         * Persist Uploaded Image(s) to the Database
                         */
-                        $productImages = new Image();
-                        $productImages->setFiles($filename[$count]);
-                        $productImages->setPublisher($this->getUser());
-                        $productImages->setSection($section);
-                        $productImages->setPrettyName($prettyName);
-                        $productImages->setX($size["0"]);
-                        $productImages->setY($size["1"]);
-                        $productImages->setDateCreated(new DateTime());
+                        $image = new Image();
+                        $image->setFiles($filename[$count]);
+                        $image->setPublisher($this->getUser());
+                        $image->setSection($section);
+                        $image->setPrettyName($prettyName);
+                        $image->setX($size["0"]);
+                        $image->setY($size["1"]);
+                        $image->setGallery($inGallery);
+                        $image->setDateCreated(new DateTime());
 
-                        $doctrine->persist($productImages);
+                        $doctrine->persist($image);
+                        array_push($images_uploads,$image);
                     }
                 }
             }
 
-            $jsonEncodeFiles = json_encode($image_files);
             
             $doctrine->flush();
 
-            if( NULL != $productImages->getId() )return TRUE;
+            
         }
 
-        return FALSE;
+        return $images_uploads;
     }
 
     private function getImages($total){
@@ -279,6 +438,16 @@ class AdminController extends Controller
         ->findBy(
             array(), // Critere
             array('dateCreated' => 'desc'),        // Tri
+            $total,                              // Limite
+            0                               // Offset
+          );
+    }
+    private function getPosts($total){
+        return $this->getDoctrine()
+        ->getRepository(Post::class)
+        ->findBy(
+            array(), // Critere
+            array('date' => 'desc'),        // Tri
             $total,                              // Limite
             0                               // Offset
           );

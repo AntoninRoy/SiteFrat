@@ -1,34 +1,35 @@
-<div class="left-column">
-        <h2>Toutes les images</h2>
-        <div class="flex-table">
-            <div class="header">
-                <div class="row">
-                    <div class="nom">Nom</div>
-                    <div class="section"  >Section</div>
-                    <div class="icon"></div>
-                    <div class="icon"></div>
+ <div class="left-column">
+            <h2>Toutes les images</h2>
+            <div class="flex-table">
+                <div class="header">
+                    <div class="row">
+                        <div class="nom">Nom</div>
+                        <div class="section"  >Section</div>
+                        <div class="icon"></div>
+                        <div class="icon"></div>
+                    </div>
+                
                 </div>
-            
-        </div>
-        <div class="body">
-        {% for image in images %}
-            <div class="row" data-id ="{{image.id}}" >
-                <div class = "nom" >
-                    <a href="{{ asset('upload/images') }}/galery/{{image.files}}" data-caption="Sunset in the wheat field<br><em class='text-muted'>© Jordan McQueen</em>" data-width="{{ image.x }}" data-height="{{ image.y }}" itemprop="contentUrl">
-                    {{image.prettyName}}
-                    </a>
+                <div class="body" id ="gallery">
+                    {% for image in images %}
+                        <div class="row" data-id ="{{image.id}}">
+                            <div class = "nom" >
+                                <a href="{{ asset('upload/images') }}/galery/{{image.files}}" data-caption="Sunset in the wheat field<br><em class='text-muted'>© Jordan McQueen</em>" data-width="{{ image.x }}" data-height="{{ image.y }}" itemprop="contentUrl">
+                                {{image.prettyName}}
+                                </a>
+                            </div>
+                            <div class = "section" >{{image.section.name}}</div>
+                            <div class = "icon delete"><a href ="#"><i class="fas fa-times-circle fa-lg" style="color:Tomato" title="Supprimer" ></i></a></div>
+                            <div class = "icon informations"><a href ="#"><i class="fas fa-info-circle fa-lg" style="color:blue" title="Plus d'informations"></i></a></div>
+                        </div>
+                    {% endfor %}
+                    
                 </div>
-                <div class = "section" >{{image.section.name}}</div>
-                <div class = "icon delete"><a href ="#"><i class="fas fa-times-circle fa-lg" style="color:Tomato" title="Supprimer" ></i></a></div>
-                <div class = "icon informations"><a href ="#"><i class="fas fa-info-circle fa-lg" style="color:blue" title="Plus d'informations"></i></a></div>
             </div>
-        {% endfor %}
-        </div>
-    </div>
-   {% if images|length ==  15 %}
+
+            {% if images|length ==  15 %}
                 <div class="moreContent">
                     <button type="button" data-total={{ images|length }}>Afficher plus ...</button>
                 </div>
             {% endif %}
-     
-</div>
+        </div>

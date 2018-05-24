@@ -55,6 +55,11 @@ class Image
      */
     private $y;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $gallery;
+
     public function getId()
     {
         return $this->id;
@@ -140,6 +145,18 @@ class Image
     public function setY(int $y): self
     {
         $this->y = $y;
+
+        return $this;
+    }
+
+    public function getGallery(): ?bool
+    {
+        return $this->gallery;
+    }
+
+    public function setGallery(bool $gallery): self
+    {
+        $this->gallery = $gallery;
 
         return $this;
     }
