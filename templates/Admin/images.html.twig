@@ -97,9 +97,9 @@
                 </div>
             </div>
 
-            {% if images|length ==  15 %}
+            {% if total > totalAfficher %}
                 <div class="moreContent">
-                    <button type="button" data-total={{ images|length }}>Afficher plus ...</button>
+                    <button type="button" data-total={{ totalAfficher }}>Afficher plus ...</button>
                 </div>
             {% endif %}
         </div>
@@ -215,28 +215,10 @@ $(document).on( "click",'.moreContent', function() {
             
         },
         error: function (xhr, textStatus, errorThrown) {
-            $.confirm({
-                title: 'Une erreur a été détectée',
-                content:"Veuillez contacter l'administrateur en cas de récidive",
-
-
-                boxWidth: '500px',
-                useBootstrap: false,
-                type: 'red',
-                typeAnimated: true,
-
-                buttons: {
-                    tryAgain: {
-                        text: 'Ok',
-                        btnClass: 'btn-red',
-                        action: function(){
-                        }
-                    },
-                }
-            });
+            simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive");
         },
         success: function (msg) {
-                console.log(msg);
+            console.log(msg);
                 $(".left-column").replaceWith(msg.html);
                 initSlider();
                 recalculatePageHeight();
@@ -247,55 +229,37 @@ $(document).on( "click",'.moreContent', function() {
 $(document).on( "click",'.icon.delete', function() {
     var src_img = $(this).parent().find('a').attr("href");
     var img_id = $(this).parent().attr("data-id");
-  $.confirm({
-    title: 'Supprimer ?',
-    content: "Etes vous sûr de vouloir supprimer cette image ?" + 
-            "<img src='"+src_img +"'>",
+    $.confirm({
+        title: 'Supprimer ?',
+        content: "Etes vous sûr de vouloir supprimer cette image ?" + 
+                "<img src='"+src_img +"'>",
 
-    boxWidth: '500px',
-    useBootstrap: false,
-    buttons: {
-        Confirmer: function () {
-            $.ajax({
-                url: "{{ path("delete_image") }}",
-                method: "post",
-                data: {
-                    img_id:img_id,
-                    
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    $.confirm({
-                        title: 'Une erreur a été détectée',
-                        content:"Veuillez contacter l'administrateur en cas de récidive",
+        boxWidth: '90%',
+        useBootstrap: false,
+        buttons: {
+            Confirmer: function () {
+                $.ajax({
+                    url: "{{ path("delete_image") }}",
+                    method: "post",
+                    data: {
+                        img_id:img_id,
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive");
+                    },
+                    success: function (msg) {
+                        $(".left-column").replaceWith(msg.html);
+                        initSlider();
+                        recalculatePageHeight();
 
-
-                        boxWidth: '500px',
-                        useBootstrap: false,
-                        type: 'red',
-                        typeAnimated: true,
-
-                        buttons: {
-                            tryAgain: {
-                                text: 'Ok',
-                                btnClass: 'btn-red',
-                                action: function(){
-                                }
-                            },
-                        }
-                    });
-                },
-                success: function (msg) {
-                    console.log(msg);
-                     $(".left-column").replaceWith(msg.html);
-                     initSlider();
-                     recalculatePageHeight();
-                }
-            })
-        },
-        Annuler: function () {
-            
-        },
-    }
+                         simpleAdvertSuccess('Récapitulatif', "L'image à été correctement supprimée");
+                    }
+                })
+            },
+            Annuler: function () {
+                
+            },
+        }
     });
 });
 
@@ -314,7 +278,6 @@ $(document).on( "click",'.icon.informations', function() {
                 boxWidth: '500px',
                 useBootstrap: false,
             }).done(function (response) {
-               
                 self.setContent(response.html);
             }).fail(function(){
                 self.setContent('Something went wrong.');
@@ -372,25 +335,18 @@ $(document).ready(function() {
                     }
                 });
             }else{
-            $.confirm({
-                title: 'Attention !',
-                content: "Vous n'avez pas sélectionné la section.",
-
-                boxWidth: '500px',
-                useBootstrap: false,
-            });
-        }
+                simpleAdvertError('Oops !',"Vous n'avez pas sélectionné la section.");
+            }
         }else{
-            $.confirm({
-                title: 'Attention !',
-                content: "Vous n'avez pas ajouté d'image(s)",
-
-                boxWidth: '500px',
-                useBootstrap: false,
-            });
+             simpleAdvertError('Oops !',"Vous n'avez pas ajouté d'image(s)");
         }
         
       }); 
+
+    myDropzone.on('addedfile', function (e,response) {
+            recalculatePageHeight();
+      });
+
 
       var files = [];
       var filesError = [];
@@ -402,31 +358,11 @@ $(document).ready(function() {
             files=response.uploaded;
             recalculatePageHeight();
         }else{
-            $.confirm({
-                    title: 'Une erreur a été détectée',
-                    content:"Veuillez contacter l'administrateur en cas de récidive",
-
-
-                    boxWidth: '500px',
-                    useBootstrap: false,
-                    type: 'red',
-                    typeAnimated: true,
-
-                    buttons: {
-                        tryAgain: {
-                            text: 'Ok',
-                            btnClass: 'btn-red',
-                            action: function(){
-                            }
-                        },
-                    }
-                });
+            simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive");
         }
         
       });
-      myDropzone.on('addedfile', function (e,response) {
-            recalculatePageHeight();
-      });
+
       this.on("complete", function (file) {
         if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
             myDropzone.removeAllFiles();
@@ -436,25 +372,8 @@ $(document).ready(function() {
                     content+="<li>"+filesError[i]+"</li>";
                 }
                 content+= "</ul><br><p>Total : "+filesError.length+"</p>";
-                $.confirm({
-                    title: 'Une erreur a été détectée',
-                    content:content,
 
-
-                    boxWidth: '500px',
-                    useBootstrap: false,
-                    type: 'red',
-                    typeAnimated: true,
-
-                    buttons: {
-                        tryAgain: {
-                            text: 'Ok',
-                            btnClass: 'btn-red',
-                            action: function(){
-                            }
-                        },
-                    }
-                });
+                simpleAdvertError('Une erreur a été détectée',content);
             }
             if(files.length !=0){
                 var content ="<p>Les images suivantes ont être ajoutées :</p><br><ul>";
@@ -462,25 +381,9 @@ $(document).ready(function() {
                     content+="<li>"+files[i]+"</li>";
                 }
                 content+= "</ul><br><p>Total : "+files.length+"</p>";
-                $.confirm({
-                    title: 'Récapitulatif',
-                    content:content,
 
-
-                    boxWidth: '500px',
-                    useBootstrap: false,
-                    type: 'green',
-                    typeAnimated: true,
-
-                    buttons: {
-                        tryAgain: {
-                            text: 'Ok',
-                            btnClass: 'btn-green',
-                            action: function(){
-                            }
-                        },
-                    }
-                });
+                simpleAdvertSuccess('Récapitulatif',content);
+                
             }
             files = [];
             filesError = [];

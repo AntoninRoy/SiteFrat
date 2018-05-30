@@ -1,0 +1,15 @@
+ <div id="gallery" style="display:none;">
+    {% for image in images %}
+        <img alt="{{image.prettyName}} {{image.section.name}}" src="{{ asset('upload/images') }}/galery/{{image.files}}"
+            data-image="{{ asset('upload/images') }}/galery/{{image.files}}"
+            data-description="{{image.prettyName}}">
+        
+    {% endfor %}
+  
+  </div>
+
+  {% if total > totalAfficher %}
+    <div class="moreContent">
+        <button type="button" data-total={{ totalAfficher }}>Afficher plus ...</button>
+    </div>
+{% endif %}

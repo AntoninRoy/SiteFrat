@@ -1,13 +1,21 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 
 
+/*
+clair : rgb(238,134,0) #ee8600
+foncé : rgb(234,89,14) #ea590e
+*/
+
+
 /*REDACTION*/
 h2{
-  margin : 0px 60px 30px 60px;
+  padding-top : 30px;
+  padding-bottom : 30px;
+  margin : 0px;
   
 }
 p{
-	margin : 30px 60px 30px 60px;
+	margin : 0px 0px 0px 0px;
 }
 .centre{
   text-align: center;
@@ -24,7 +32,7 @@ p{
   justify-content: center;
 }
 .orange{
-  background-color: #FFA500;
+  background-color: #ee8600;
   
 }
 .orange h3{
@@ -33,14 +41,12 @@ p{
 .columns{
 	display: flex;
   flex-direction: row;
+
 }
 .column{
   flex : 1 0 0px;
 }
 
-.partie{
-  margin-bottom: 80px;
-}
 
 .partie img {
 	width : 100%;
@@ -53,27 +59,7 @@ p{
 
 
 /*img SLIDER*/
-.slider{
-  -webkit-user-select: none; /* Chrome/Safari */        
--moz-user-select: none; /* Firefox */
--ms-user-select: none; /* IE10+ */  
--o-user-select: none;
-user-select: none;
-}
-.slider img {
-	width : 100%;
-  height: auto;
-  max-height: 350px;
 
-}
-
-
-.single-item{
-  text-align: right;
-	z-index:0;
- 	width : 700px;
-;
-}
 
 
 /*MENU AND RESPONSIVE*/
@@ -88,14 +74,14 @@ body,html{
 	margin : 0px;
 }
 .margin{
-  padding-top : 80px;
+  padding-top : 50px;
   
  }
 
 
 .navBar {
 z-index : 1000;
-  background-color: #FFA500;
+  background-color: #ee8600;
   position: fixed;
   min-width: 100%;
 -moz-box-shadow: 0px 2px 5px 0px #656565;
@@ -109,14 +95,21 @@ box-shadow: 0px 2px 5px 0px #656565;
   border-radius: 50px;
   display: inline-block;
   height: 45px;
-  margin: 1em 0;
+  margin-top:-5px;
   width: 45px;
+}
+.logo img{
+  border-radius: 0px 0px 4px 4px;
+  -moz-box-shadow: 0px 2px 5px 0px #656565;
+-webkit-box-shadow: 0px 2px 5px 0px #656565;
+-o-box-shadow: 0px 2px 5px 0px #656565;
+box-shadow: 0px 2px 5px 0px #656565;
 }
 
 .wrapper {
   margin: 0 auto;
   max-width: 960px;
-  height : 80px;
+  height : 50px;
   padding: 0 2%;
 }
 
@@ -128,12 +121,12 @@ nav ul {
 
 }
 nav ul a {
-  color: #FFF;
+  color: #000;
   text-decoration: none;
   transition: all .1.5s ease;
 }
 nav ul a:hover {
-  color: #000;
+  color: #FFF;
 }
 nav li {
   display: inline-block;
@@ -152,10 +145,10 @@ nav .wrapper {
 }
 @media screen and (max-width: 768px) {
   nav ul a {
-    color: #FFA500;
+    color: #ee8600;
   }
   nav ul a:hover {
-    color: #FFA500;
+    color: #ee8600;
   }
 
   nav nav ul a {
@@ -175,8 +168,8 @@ nav .wrapper {
 	padding : 0px;
   }
   nav li {
-    border-bottom: 2px solid #FFA500;
-    color: #FFA500;
+    border-bottom: 2px solid #ee8600;
+    color: #ee8600;
     display: block;
     font-size: 1.5em;
     padding: 25px 0px;
@@ -247,12 +240,13 @@ nav .wrapper {
   border-radius: 4px;
 
   
-  height: 90px;
+  height: 70px;
   color : rgb(102, 102, 102);
 
 }
 .pageTitle div {
-  padding : 30px;
+  padding-left: 30px;
+  padding-top : 20px;
   max-width: 1100px;
   margin: 0 auto;
 

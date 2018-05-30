@@ -1,0 +1,455 @@
+{% extends 'Layout/admin_layout.html.twig' %}
+
+
+
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+
+<style>
+#editor-container,#editor-container2{
+     margin-bottom: 20px;
+     border : none;
+    -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 0 0 4px 4px;
+}
+.ql-toolbar{
+     border : none !important;
+    -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 0px 0px 0px 0px;
+}
+
+.content-column{
+   display: flex;
+  flex-direction: row;
+ 
+}
+.left-column{
+  flex : 7 0 0px;
+   padding-right : 20px;
+   padding-bottom : 40px;
+}
+.right-column{
+      flex : 4 0 0px;
+       padding-left : 20px;
+       border-left : 1px dotted rgb(102, 102, 102);
+}
+.left-column{
+  flex : 1 0 0px;
+   padding-right : 20px;
+   padding-bottom : 40px;
+}
+.right-column{
+      flex : 1 0 0px;
+       padding-left : 20px;
+       border-left : 1px dotted rgb(102, 102, 102);
+}
+
+.flex-table  .titre{
+    flex : 5 0 0px;
+    overflow: hidden;
+}
+.flex-table  .date{
+    flex : 2 0 0px;
+}
+.flex-table  .icon{
+    flex : 1 0 0px;
+}
+#create_post{
+    margin-bottom : 20px;
+}
+
+
+@media screen and (max-width: 640px) {
+    .content-column{
+        flex-direction: column;
+    }
+    .right-column{
+        padding-left : 0px;
+        border : none;
+    }
+    .left-column{
+        padding-right : 0px;
+    }
+    .flex-table  .section{
+        display: none!important;
+    }
+}
+
+</style>
+
+
+
+{% endblock %}
+
+{% block h1 %}Agenda{% endblock %}
+
+{% block body %}
+    <div class="content-column">
+        <div class="left-column">
+            <h2>Ajouter un événement</h2>
+            <div class="info">
+                <p>Attention a bien faire comme ça</p>
+                <p>Attention a bien faire comme ça</p>
+            </div>
+            <form action="#" method="post" name ="create_event">
+                <input id="event_title" type="text" value="" placeholder="Nom de l'événement" >
+                <input id="event_date" type="text" id="datepicker" placeholder="Date de l'événement">
+                <input id="create_post" type="checkbox" value="create_post"> 
+                <label for="create_post">Créer un article pour présenter l'événement</label>
+                <div id="contener_buttons">
+                    <input type="submit" value="Créer l'événement" id="submit-event" />
+                </div>
+            </form>
+            <form style ="display : none" action="#" method="post" name ="create_post" data-type="create" data-postID=" ">
+                <input id="post_title" type="text" value="" placeholder="Titre de l'article" >
+                <div id="editor-container" placeholder="Your name..">
+                </div>
+                
+                <div id="fileInput" class="dropzone">
+                    <div class="fallback">
+                        <input name="file" type="file" multiple />
+                    </div>
+                </div>
+                <div id="contener_buttons">
+                    <input type="submit" value="Créer l'événement et l'article" id="submit-all" />
+                </div>
+            </form>
+          
+
+            
+        </div>
+        <div class="right-column">
+            <div class="flex-table">
+                <h2>Tous les événements</h2>
+                <div class="header">
+                    <div class="row">
+                        <div class="nom">Nom</div>
+                        <div class="date">Date</div>
+
+                        <div class="icon"></div>
+                        <div class="icon"></div>
+                    </div>    
+                </div>
+                <div class="body" id ="gallery">
+                    {% for event in events %}
+                        <div class="row" data-id ="{{event.id}}">
+                            <div class = "titre" >{{event.name}}</div>
+                            <div class = "date" >{{event.date|date("m/d/Y")}}</div>
+                            <div class = "icon delete"><a href ="#"><i class="fas fa-times-circle fa-lg" style="color:Tomato" title="Supprimer" ></i></a></div>
+                            <div class = "icon informations"><a href ="#"><i class="fas fa-info-circle fa-lg" style="color:blue" title="Plus d'informations"></i></a></div>
+                            </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+            {% if total > totalAfficher %}
+                <div class="moreContent">
+                    <button type="button" data-total={{ totalAfficher }}>Afficher plus ...</button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<script>
+$(document).on( "click",'#submit-event', function(e) {
+    e.preventDefault();
+    var event_name = $("input#event_title").val();
+    var event_date = $("input#event_date").val();
+
+    console.log(event_date);
+    var allOk = true;
+    if(allOk && event_name =="" ){
+        simpleAdvertError("Oops !","Vous n'avez pas saisi de de nom à l'événement !");
+        allOk=false;
+    }
+    if(allOk && event_date =="" ){
+        simpleAdvertError("Oops !","Vous n'avez pas saisi de date !");
+        allOk=false;
+    }
+    if(allOk){
+        $.confirm({
+            title: 'Confirmation !',
+            content: "Etes vous sûr de vouloir créer un article ?",
+
+            boxWidth: '90%',
+            useBootstrap: false,
+            
+            buttons: {
+                Confirmer: function () {
+                
+                                    
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('create_event') }}",
+                        data: {
+                            event_name: event_name,
+                            event_date :  event_date,
+                        },
+                        success: function (response) {
+                            simpleAdvertSuccess('Récapitulatif',"L'article a correctement été ajouté.");
+
+                            $(".right-column").replaceWith(response.html);
+                            recalculatePageHeight();
+                            
+                        },
+                        error : function (response){
+                            simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive"); 
+                        }
+                    });
+                    
+
+                },
+                Annuler: function () {
+                    
+                },
+            }
+        });
+    }
+    
+     $('.checkbox').find('input[type=checkbox]:not(:checked)').each(function(index) {
+                        if(index !=0){
+                            deleteImageId+=",";
+                        }
+                        deleteImageId+=$(this).val();
+                    });
+});
+/*Supprimer un article*/
+    $(document).on( "click",'.delete', function() {
+        var event_id = $(this).parent().attr("data-id");
+        var nom = $(this).parent().find(".titre").text();
+        $.confirm({
+            title: 'Supprimer ?',
+            content: "Etes vous sûr de vouloir supprimer l'evenement "+nom+" ?",
+            boxWidth: '90%',
+            useBootstrap: false,
+            buttons: {
+                Confirmer: function () {
+                    
+                    $.ajax({
+                        url: "{{ path("delete_event") }}",
+                        method: "post",
+                        data: {
+                            event_id:event_id,
+                            
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive");
+                        },
+                        success: function (response) {
+                            $(".right-column").replaceWith(response.html);
+                            recalculatePageHeight();
+                            simpleAdvertSuccess('Récapitulatif', "L'article à correctement été supprimé");
+
+                        }
+                    })
+                    
+                },
+                Annuler: function () {
+                    
+                },
+            }
+        });
+
+    });
+$(document).on( "click",'#create_post', function(e) {
+    if($("input#create_post").is(':checked')){
+        $("form[name=create_post]").show();
+        $("#submit-event").hide();
+        recalculatePageHeight();
+    }else{
+        $("form[name=create_post]").hide();
+        $("#submit-event").show();
+        recalculatePageHeight();
+    }
+});
+$( function() {
+    $( "#event_date" ).datepicker();
+} );
+
+    /* Initialisation de la zone de saisie */
+    var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike', 'link'],       
+        ['blockquote'],           
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      
+        [{ 'indent': '-1'}, { 'indent': '+1' }],          
+        [{ 'header': [ 2, 3, 4, 5, 6, false] }],
+        [{ 'color': [] }, { 'background': [] }],          
+        ['clean']                                         
+    ];
+
+    var quill = new Quill('#editor-container', {
+        modules: {
+            toolbar:toolbarOptions
+        },
+        placeholder: 'Composez votre article ... ',
+        theme: 'snow'
+    });
+
+    /* DROPZONE */
+    Dropzone.autoDiscover = false;
+    var myDropzone;
+    $(document).ready(function() {
+        new Dropzone('#fileInput', { 
+            url: "{{path('create_event_bis')}}",
+            uploadMultiple: true,
+            maxFilesize: 5,
+            parallelUploads: 10,
+            maxFiles: 100,
+            addRemoveLinks: true,
+            acceptedFiles: 'image/jpeg,image/png,image/png,image/gif',
+            autoProcessQueue: false,
+            paramName: "files",
+            dictInvalidFileType : "Le format du fichier est invalide",
+            dictDefaultMessage : "Cliquez pour ajouter une image à votre article",
+            dictRemoveFile : "Supprimer",
+            dictFileTooBig : "Fichier trop volumineux",
+            init: function () {
+                myDropzone = this;
+                /* Lancement du formulaire */
+                $("#submit-all").click(function (e) {
+                    e.preventDefault();
+                    var event_name = $("input#event_title").val();
+                    var event_date = $("input#event_date").val();
+                    /* Vérification de tous les champs */
+                    var allOk=true;
+
+                    if(allOk && event_name =="" ){
+                        simpleAdvertError("Oops !","Vous n'avez pas saisi de nom à l'événement !");
+                        allOk=false;
+                    }
+                    if(allOk && event_date =="" ){
+                        simpleAdvertError("Oops !","Vous n'avez pas saisi de date à l'événement !");
+                        allOk=false;
+                    }
+                    if($('#post_title').val()=="" && allOk){
+                        simpleAdvertError("Oops !","Vous n'avez pas saisi de titre à l'article !");
+                        allOk=false;
+                    }
+                    if(quill.getLength()<=1 && allOk ){
+                        simpleAdvertError("Oops !","Vous n'avez pas saisi de contenu dans l'article!");
+                        allOk=false;
+                    }
+                    
+                    if(allOk){
+                        $.confirm({
+                            title: 'Confirmation !',
+                            content: "Etes vous sûr de vouloir créer un événement et un article ?",
+
+                            boxWidth: '90%',
+                            useBootstrap: false,
+                            
+                            buttons: {
+                                Confirmer: function () {
+                               
+                                    if (myDropzone.getQueuedFiles().length > 0) {                        
+                                        myDropzone.processQueue();  
+                                    }else {                       
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "{{ path('create_event_bis') }}",
+                                            data: {
+                                                post_title: $('#post_title').val(),
+                                                post_content :  $("#editor-container .ql-editor").html(),
+                                                event_name: event_name,
+                                                event_date :  event_date,
+                                            },
+                                            success: function (response) {
+                                                console.log(response);
+                                                $(".right-column").replaceWith(response.html);
+                                                simpleAdvertSuccess('Récapitulatif',"L'article et l'événement ont correctement été ajoutés.");
+                                                recalculatePageHeight();
+                                            },
+                                            error : function (response){
+                                                simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive"); 
+                                            }
+                                        });
+                                    }   
+     
+                                },
+                                Annuler: function () {
+                                    
+                                },
+                            }
+                        });
+                    }
+                    
+                
+                }); 
+
+                /* Recalcul de la taille de la sidebar lors de l'ajout d'une image */
+                myDropzone.on('addedfile', function (e,response) {
+                        recalculatePageHeight();
+                });
+
+                /* Retour de l'ajax */
+                var files = [];
+                var filesError = [];
+                myDropzone.on('success', function (e,response) {
+                    $(".right-column").replaceWith(response.html);                
+                    filesError=response.notUploaded;
+                    files=response.uploaded;
+                    recalculatePageHeight();
+
+                });
+
+                /*En cs d'erreur*/
+                myDropzone.on('error', function (e,response) {
+                    simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive"); 
+
+                });
+
+                /* A la fin de l'upload des fichier (pas de l'ajax) */
+                this.on("complete", function (file) {
+                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                        //supression des fichiers
+                        myDropzone.removeAllFiles();
+                        //si messages d'erreur
+                        if(filesError.length !=0){
+                            //création du message d'erreur
+                            var content ="<p>Les images suivantes n'ont pas pu être ajoutées à votre article:</p><br><ul>";
+                            for (var i = 0; i < filesError.length; i++) {
+                                content+="<li>"+filesError[i]+"</li>";
+                            }
+                            content+= "</ul><br><p>Total : "+filesError.length+"</p>";
+                            
+                            simpleAdvertError('Une erreur a été détectée',content);
+                        }
+                        if(files.length !=0){
+                            simpleAdvertSuccess('Récapitulatif',"L'article et l'événement ont correctement été ajoutés.");
+
+                        }
+                        //reset des tableaux
+                        files = [];
+                        filesError = [];
+                    }
+                });
+            },
+            //ajout des différentes data dans la requète ajax
+            sending: function (file, xhr, formData) {
+                
+                formData.append("post_title", $('#post_title').val());
+                formData.append("post_content", $("#editor-container .ql-editor").html());
+                formData.append("event_name", $("input#event_title").val());
+                formData.append("event_date", $("input#event_date").val());
+
+            },
+        })
+    })
+</script>
+   
+{% endblock %}

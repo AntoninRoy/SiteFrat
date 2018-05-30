@@ -131,13 +131,7 @@
                 /* Lancement du formulaire */
                 $("#submit-all2").click(function (e) {
                     e.preventDefault();
-                    /* Message de confirmation */
-                    var content ="<p>Valider l'ajout de ces images ?</p><br><ul>";
-                    for (var i = 0; i < myDropzone2.files.length; i++) {
-                        content+="<li>"+myDropzone2.files[i].name+"</li>";
-                    }
-                    content+= "</ul><br><p>Total : "+myDropzone2.files.length+"</p>";
-
+                   
                     /* Vérification de tous les champs */
                     var allOk=true;
                     if($('#post_title2').val()=="" && allOk){
@@ -156,7 +150,10 @@
                         deleteImageId+=$(this).val();
                     });
 
-                    
+                     /* Message de confirmation */
+                    var content ="<p>Valider la modification de l'article ?</p><br><ul>";
+
+
                     if(allOk){
                         $.confirm({
                             title: 'Confirmation !',
@@ -182,10 +179,11 @@
                                             },
                                             success: function (result) {
                                                 $(".jconfirm-buttons button:contains('Annuler')").trigger("click");
-                                                if (result.code === 200) {
-                                                    // refresh current url to see student
-                                                } else {
-                                                }
+                                                simpleAdvertSuccess('Récapitulatif',"L'article a correctement été modifié.");
+                                            },
+                                            error: function (result) {
+                                                $(".jconfirm-buttons button:contains('Annuler')").trigger("click");
+                                                simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive");
                                             }
                                         });
                                     }   
@@ -201,41 +199,25 @@
                 
                 }); 
 
+                 /* Recalcul de la taille de la sidebar lors de l'ajout d'une image */
+                myDropzone2.on('addedfile', function (e,response) {
+                        recalculatePageHeight();
+                });
+
                 /* Retour de l'ajax */
-                
                 myDropzone2.on('success', function (e,response) {
                     filesError=response.notUploaded;
                     files=response.uploaded;
                     recalculatePageHeight();
                      deleteImageId = [];
                      $(".jconfirm-buttons button:contains('Annuler')").trigger("click");
+                                               
                 });
                 myDropzone2.on('error', function (e,response) {
-                    $.confirm({
-                            title: 'Une erreur a été détectée',
-                            content:"Veuillez contacter l'administrateur en cas de récidive",
-
-
-                            boxWidth: '90%',
-                            useBootstrap: false,
-                            type: 'red',
-                            typeAnimated: true,
-
-                            buttons: {
-                                tryAgain: {
-                                    text: 'Ok',
-                                    btnClass: 'btn-red',
-                                    action: function(){
-                                    }
-                                },
-                            }
-                        });
+                   simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive");
                         return false;
                 });
-                /* Recalcul de la taille de la sidebar lors de l'ajout d'une image */
-                myDropzone2.on('addedfile', function (e,response) {
-                        recalculatePageHeight();
-                });
+               
 
                 /* A la fin de l'upload des fichier (pas de l'ajax) */
                 this.on("complete", function (file) {
@@ -245,57 +227,17 @@
                         //si messages d'erreur
                         if(filesError.length !=0){
                             //création du message d'erreur
-                            var content ="<p>Les images suivantes n'ont pas pu être ajoutées :</p><br><ul>";
+                            var content ="<p>Les images suivantes n'ont pas pu être ajoutées à votre article:</p><br><ul>";
                             for (var i = 0; i < filesError.length; i++) {
                                 content+="<li>"+filesError[i]+"</li>";
                             }
                             content+= "</ul><br><p>Total : "+filesError.length+"</p>";
-                            $.confirm({
-                                title: 'Une erreur a été détectée',
-                                content:content,
 
-
-                                boxWidth: '90%',
-                                useBootstrap: false,
-                                type: 'red',
-                                typeAnimated: true,
-
-                                buttons: {
-                                    tryAgain: {
-                                        text: 'Ok',
-                                        btnClass: 'btn-red',
-                                        action: function(){
-                                        }
-                                    },
-                                }
-                            });
+                            simpleAdvertError('Une erreur a été détectée',content);
                         }
                         if(files.length !=0){
-                            //création du message de confirmation
-                            var content ="<p>Les images suivantes ont être ajoutées :</p><br><ul>";
-                            for (var i = 0; i < files.length; i++) {
-                                content+="<li>"+files[i]+"</li>";
-                            }
-                            content+= "</ul><br><p>Total : "+files.length+"</p>";
-                            $.confirm({
-                                title: 'Récapitulatif',
-                                content:content,
+                            simpleAdvertSuccess('Récapitulatif',"L'article a correctement été modifié.");
 
-
-                                boxWidth: '90%',
-                                useBootstrap: false,
-                                type: 'green',
-                                typeAnimated: true,
-
-                                buttons: {
-                                    tryAgain: {
-                                        text: 'Ok',
-                                        btnClass: 'btn-green',
-                                        action: function(){
-                                        }
-                                    },
-                                }
-                            });
                         }
                         //reset des tableaux
                         files = [];

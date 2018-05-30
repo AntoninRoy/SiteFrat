@@ -1,0 +1,30 @@
+ <div class="right-column">
+            <div class="flex-table">
+                <h2>Tous les événements</h2>
+                <div class="header">
+                    <div class="row">
+                        <div class="nom">Nom</div>
+                        <div class="date">Date</div>
+
+                        <div class="icon"></div>
+                        <div class="icon"></div>
+                    </div>    
+                </div>
+                <div class="body" id ="gallery">
+                    {% for event in events %}
+                        <div class="row" data-id ="{{event.id}}">
+                            <div class = "titre" >{{event.name}}</div>
+                            <div class = "date" >{{event.date|date("d/m/Y")}}</div>
+                            <div class = "icon delete"><a href ="#"><i class="fas fa-times-circle fa-lg" style="color:Tomato" title="Supprimer" ></i></a></div>
+                            <div class = "icon informations"><a href ="#"><i class="fas fa-info-circle fa-lg" style="color:blue" title="Plus d'informations"></i></a></div>
+                            </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+            {% if total > totalAfficher %}
+                <div class="moreContent">
+                    <button type="button" data-total={{ totalAfficher }}>Afficher plus ...</button>
+                </div>
+            {% endif %}
+        </div>

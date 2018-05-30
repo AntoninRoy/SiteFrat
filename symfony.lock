@@ -68,6 +68,9 @@
     "ezyang/htmlpurifier": {
         "version": "v4.10.0"
     },
+    "facebook/graph-sdk": {
+        "version": "5.6.2"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },

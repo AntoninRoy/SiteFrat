@@ -24,7 +24,7 @@ class Post
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
@@ -43,6 +43,11 @@ class Post
      * @ORM\ManyToMany(targetEntity="App\Entity\Image")
      */
     private $images;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Evenement", inversedBy="Posts")
+     */
+    private $evenement;
 
     public function __construct()
     {
@@ -124,6 +129,18 @@ class Post
         if ($this->images->contains($image)) {
             $this->images->removeElement($image);
         }
+
+        return $this;
+    }
+
+    public function getEvenement(): ?Evenement
+    {
+        return $this->evenement;
+    }
+
+    public function setEvenement(?Evenement $evenement): self
+    {
+        $this->evenement = $evenement;
 
         return $this;
     }

@@ -27,9 +27,9 @@
                 </div>
             </div>
 
-            {% if images|length ==  15 %}
+            {% if total > totalAfficher %}
                 <div class="moreContent">
-                    <button type="button" data-total={{ images|length }}>Afficher plus ...</button>
+                    <button type="button" data-total={{ total }}>Afficher plus ...</button>
                 </div>
             {% endif %}
         </div>

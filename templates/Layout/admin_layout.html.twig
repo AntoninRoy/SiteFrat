@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta property="fb:pages" content="700439113681274"
         <title>{% block title %}Welcome!{% endblock %}</title>
        
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/basic.css">
@@ -58,10 +59,10 @@
                     <a href="{{ path('admin_post')}}" >Gestion actualités</a>
                 </li>
                 <li>
-                   <a>Gestion membres</a>
+                   <a >Gestion membres</a>
                 </li>
                 <li>
-                   <a>Gestion agenda</a>
+                   <a href="{{ path('admin_event')}}" >Gestion agenda</a>
                 </li>
             </ul>
 	

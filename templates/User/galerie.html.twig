@@ -12,6 +12,29 @@
     justify-content: center;
     margin-top: 30px;
 }
+
+.moreContent button{
+    text-align: center;
+    height : 25px;
+    width: 120px;
+    border : none;
+
+    background-color: #f2f2f2;
+    color : #333;
+    cursor: pointer;
+
+    -moz-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+    box-shadow: rgba(0, 0, 0, 0.19) 0 0 8px 0;
+
+}
+.moreContent{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
 </style>
 {% endblock %}
 
@@ -41,6 +64,12 @@
   
   </div>
 
+  {% if total > totalAfficher %}
+    <div class="moreContent">
+        <button type="button" data-total={{ totalAfficher }}>Afficher plus ...</button>
+    </div>
+{% endif %}
+
 {% endblock %}
 
 {% block javascripts %}
@@ -51,10 +80,46 @@
                 tiles_type:"justified"
             });
             $(function() {
-                $('select').selectric();
+                $('select').selectric({
+                    onChange: function(value) {
+                        call("0");
+                    }
+                })
+            });
+
+            $(document).on( "click",".moreContent button", function() {
+                var total =$('.ug-thumb-image.ug-trans-enabled').length;
+                call(total);
             });
     });
-    
+    function call(total) {
+        
+        if($('select').val()==undefined){
+            section_id = "none";
+        }else{
+            section_id = $('select').val();
+        }
+        $.ajax({
+                url: "{{ path("viewmore_galerie") }}",
+                method: "post",
+                data: {
+                    total : total,
+                    section_id : section_id
+                    
+                },
+                success: function (response) {
+                        
+                    $( "#gallery").remove();
+                    $( ".moreContent").remove();
+                    $( response.html).insertAfter( $( ".selectContener" ) );
+                    $("#gallery").unitegallery({
+                        tiles_type:"justified"
+                    });
+            
+
+                }
+            })
+    }
 </script>
    
 {% endblock %}

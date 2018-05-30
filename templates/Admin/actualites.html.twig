@@ -163,6 +163,11 @@
                     
                 </div>
             </div>
+              {% if total > totalAfficher %}
+                <div class="moreContent">
+                    <button type="button" data-total={{ totalAfficher }}>Afficher plus ...</button>
+                </div>
+            {% endif %}
      </div>
     </div>
     {% endblock %}
@@ -177,9 +182,7 @@
             boxWidth: '90%',
             useBootstrap: false,
             buttons: {
-
-                Annuler: function () {
-                    
+                Annuler: function () {  
                 },
             },
             content: function () {
@@ -193,25 +196,60 @@
                     },
                     method: 'post'
                 }).done(function (response) {
-            
-                    
                     self.setContent(response.formulaire);
-                    /*
-                    self.setContent(self.content + '<br>Version: ' + response.version); // appending
-                    */
                     self.setTitle("Modification de l'article : "+response.title);
 
                 }).fail(function(){
                     self.setContent('Something went wrong.');
                 });
             },
-            confirm: function(){
-                this.setContent( this.content + '<h4>Adding a new sentence.</h4>');
-                return false; // prevent modal from closing
+        });
+    });
+
+    /*Plus d'informations*/
+    $(document).on( "click",'.icon.informations', function() {
+        var post_id = $(this).parent().attr("data-id");
+        $.confirm({
+            content: function () {
+                var self = this;
+                return $.ajax({
+                    title: 'Informations supplémentaires',
+                    url: "{{ path("more_post") }}",
+                    method: "post",
+                    data: {
+                        post_id:post_id,
+                    },
+                    boxWidth: '90%',
+                    useBootstrap: false,
+                }).done(function (response) {
+                    self.setContent(response.html);
+                }).fail(function(){
+                    self.setContent('Something went wrong.');
+                });
             }
         });
     });
 
+    /*Afficher plus d'articles */
+    $(document).on( "click",'.moreContent', function() {
+        var total = $(this).find("button").attr("data-total");
+        $.ajax({
+            url: "{{ path("viewmore_post") }}",
+            method: "post",
+            data: {
+                total:total,
+                
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive");
+            },
+            success: function (response) {
+                $(".right-column").replaceWith(response.html);
+                recalculatePageHeight();
+            }
+        })
+    });
+    /*Supprimer un article*/
     $(document).on( "click",'.delete', function() {
         var post_id = $(this).parent().attr("data-id");
         var nom = $(this).parent().find(".titre").text();
@@ -219,8 +257,6 @@
         $.confirm({
             title: 'Supprimer ?',
             content: "Etes vous sûr de vouloir supprimer l'article "+nom+" ?",
-                   
-
             boxWidth: '90%',
             useBootstrap: false,
             buttons: {
@@ -233,31 +269,13 @@
                             
                         },
                         error: function (xhr, textStatus, errorThrown) {
-                            $.confirm({
-                                title: 'Une erreur a été détectée',
-                                content:"Veuillez contacter l'administrateur en cas de récidive",
-
-
-                                boxWidth: '90%',
-                                useBootstrap: false,
-                                type: 'red',
-                                typeAnimated: true,
-
-                                buttons: {
-                                    tryAgain: {
-                                        text: 'Ok',
-                                        btnClass: 'btn-red',
-                                        action: function(){
-                                        }
-                                    },
-                                }
-                            });
+                            simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive");
                         },
                         success: function (response) {
-                            console.log(response);
                             $(".right-column").replaceWith(response.html);
-                            //initSlider();
                             recalculatePageHeight();
+                            simpleAdvertSuccess('Récapitulatif', "L'article à correctement été supprimé");
+
                         }
                     })
                 },
@@ -275,14 +293,14 @@
 
     /* Initialisation de la zone de saisie */
     var toolbarOptions = [
-        ['bold', 'italic', 'underline', 'strike', 'link'],        // toggled buttons
+        ['bold', 'italic', 'underline', 'strike', 'link'],       
         ['blockquote'],           
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+        [{ 'script': 'sub'}, { 'script': 'super' }],      
+        [{ 'indent': '-1'}, { 'indent': '+1' }],          
         [{ 'header': [ 2, 3, 4, 5, 6, false] }],
-        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-        ['clean']                                         // remove formatting button
+        [{ 'color': [] }, { 'background': [] }],          
+        ['clean']                                         
     ];
 
     var quill = new Quill('#editor-container', {
@@ -316,27 +334,21 @@
                 /* Lancement du formulaire */
                 $("#submit-all").click(function (e) {
                     e.preventDefault();
-                    /* Message de confirmation */
-                    var content ="<p>Valider l'ajout de ces images ?</p><br><ul>";
-                    for (var i = 0; i < myDropzone.files.length; i++) {
-                        content+="<li>"+myDropzone.files[i].name+"</li>";
-                    }
-                    content+= "</ul><br><p>Total : "+myDropzone.files.length+"</p>";
 
                     /* Vérification de tous les champs */
                     var allOk=true;
                     if($('#post_title').val()=="" && allOk){
-                        simpleAdvert("Oops !","Vous n'avez saisi de titre !");
+                        simpleAdvertError("Oops !","Vous n'avez pas saisi de titre !");
                         allOk=false;
                     }
                     if(quill.getLength()<=1 && allOk ){
-                        simpleAdvert("Oops !","Vous n'avez saisi de contenu !");
+                        simpleAdvertError("Oops !","Vous n'avez pas saisi de contenu !");
                         allOk=false;
                     }
                     if(allOk){
                         $.confirm({
                             title: 'Confirmation !',
-                            content: content,
+                            content: "Etes vous sûr de vouloir créer un article ?",
 
                             boxWidth: '90%',
                             useBootstrap: false,
@@ -357,8 +369,11 @@
                                             success: function (response) {
                                                  console.log(response);
                                                 $(".right-column").replaceWith(response.html);
-                                                //initSlider();
+                                                simpleAdvertSuccess('Récapitulatif',"L'article a correctement été ajouté.");
                                                 recalculatePageHeight();
+                                            },
+                                            error : function (response){
+                                                simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive"); 
                                             }
                                         });
                                     }   
@@ -374,43 +389,26 @@
                 
                 }); 
 
+                /* Recalcul de la taille de la sidebar lors de l'ajout d'une image */
+                myDropzone.on('addedfile', function (e,response) {
+                        recalculatePageHeight();
+                });
+
                 /* Retour de l'ajax */
                 var files = [];
                 var filesError = [];
                 myDropzone.on('success', function (e,response) {
-                    $(".right-column").replaceWith(response.html);
-                                            
-                                                
+                    $(".right-column").replaceWith(response.html);                
                     filesError=response.notUploaded;
                     files=response.uploaded;
                     recalculatePageHeight();
 
-                    
                 });
+
+                /*En cs d'erreur*/
                 myDropzone.on('error', function (e,response) {
-                    $.confirm({
-                            title: 'Une erreur a été détectée',
-                            content:"Veuillez contacter l'administrateur en cas de récidive",
+                    simpleAdvertError('Une erreur a été détectée',"Veuillez contacter l'administrateur en cas de récidive"); 
 
-
-                            boxWidth: '90%',
-                            useBootstrap: false,
-                            type: 'red',
-                            typeAnimated: true,
-
-                            buttons: {
-                                tryAgain: {
-                                    text: 'Ok',
-                                    btnClass: 'btn-red',
-                                    action: function(){
-                                    }
-                                },
-                            }
-                        });
-                });
-                /* Recalcul de la taille de la sidebar lors de l'ajout d'une image */
-                myDropzone.on('addedfile', function (e,response) {
-                        recalculatePageHeight();
                 });
 
                 /* A la fin de l'upload des fichier (pas de l'ajax) */
@@ -421,57 +419,17 @@
                         //si messages d'erreur
                         if(filesError.length !=0){
                             //création du message d'erreur
-                            var content ="<p>Les images suivantes n'ont pas pu être ajoutées :</p><br><ul>";
+                            var content ="<p>Les images suivantes n'ont pas pu être ajoutées à votre article:</p><br><ul>";
                             for (var i = 0; i < filesError.length; i++) {
                                 content+="<li>"+filesError[i]+"</li>";
                             }
                             content+= "</ul><br><p>Total : "+filesError.length+"</p>";
-                            $.confirm({
-                                title: 'Une erreur a été détectée',
-                                content:content,
-
-
-                                boxWidth: '90%',
-                                useBootstrap: false,
-                                type: 'red',
-                                typeAnimated: true,
-
-                                buttons: {
-                                    tryAgain: {
-                                        text: 'Ok',
-                                        btnClass: 'btn-red',
-                                        action: function(){
-                                        }
-                                    },
-                                }
-                            });
+                            
+                            simpleAdvertError('Une erreur a été détectée',content);
                         }
                         if(files.length !=0){
-                            //création du message de confirmation
-                            var content ="<p>Les images suivantes ont être ajoutées :</p><br><ul>";
-                            for (var i = 0; i < files.length; i++) {
-                                content+="<li>"+files[i]+"</li>";
-                            }
-                            content+= "</ul><br><p>Total : "+files.length+"</p>";
-                            $.confirm({
-                                title: 'Récapitulatif',
-                                content:content,
+                            simpleAdvertSuccess('Récapitulatif',"L'article a correctement été ajouté.");
 
-
-                                boxWidth: '90%',
-                                useBootstrap: false,
-                                type: 'green',
-                                typeAnimated: true,
-
-                                buttons: {
-                                    tryAgain: {
-                                        text: 'Ok',
-                                        btnClass: 'btn-green',
-                                        action: function(){
-                                        }
-                                    },
-                                }
-                            });
                         }
                         //reset des tableaux
                         files = [];
@@ -489,27 +447,7 @@
     })
     /* AUTRE*/
     $( document ).ready(function() {
-   
         recalculatePageHeight();
-    });
-
-    $('form[name="create_post"]').submit(function(e) {
-        e.preventDefault();
-        $("textarea#post_content").val($("#editor-container .ql-editor").html());
-        var formSerialize = $(this).serialize();
-        $.ajax({
-            type: "POST",
-            url: "{{ path('create_post') }}",
-            data: formSerialize,
-            success: function (result) {
-    
-                if (result.code === 200) {
-                    // refresh current url to see student
-                } else {
-
-                }
-            }
-        });
     });
 </script>
    

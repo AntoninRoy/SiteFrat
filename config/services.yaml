@@ -3,6 +3,10 @@
 parameters:
     locale: 'en'
     images_directory: '%kernel.project_dir%/public/upload/images'
+    app_id: 700439113681274
+    app_secret: 06ccb985b4c85bd9ed2dfc4f2d9f1796
+    page_id: 2050222908556097
+    token: EAAJ9C7COyXoBAAtMuxZCYs03gUhExuyCZBD5UvZB8P6fA6IqYUUPHLj2ruKyHSCRTciUARxJbwFMLXnfPRpHLZBQkXAmAAyhT4nXCiMZBbTeNvbmcLEy6ZBYAzn2jbWmXbNZAAvtnbPD28FIpDBCgmDTN23s9efZAZCGCMRICrh6heQZDZD
 
 services:
     # default configuration for services in *this* file
@@ -27,3 +31,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\FacebookService:
+        arguments:
+            $app_id : "%app_id%"
+            $app_secret : "%app_secret%"
+            $page_id : "%page_id%"
+            $token : "%token%"
